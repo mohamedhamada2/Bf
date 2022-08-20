@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.mz.bf.R;
 import com.mz.bf.databinding.BluthoosRowBinding;
+import com.mz.bf.uis.activity_print_bill.PrintBillActivity;
 
 import java.io.IOException;
 import java.util.List;
@@ -43,9 +44,14 @@ public class BluetoothAdapter extends RecyclerView.Adapter<BluetoothAdapter.Blue
 
 
         holder.itemView.setOnClickListener(v -> {
-           /* if (appCompatActivity instanceof PrintSalesInvoiceActivity){
-
-            }*/
+            if (appCompatActivity instanceof PrintBillActivity){
+                PrintBillActivity activity = (PrintBillActivity) appCompatActivity;
+                try {
+                    activity.openBT(list.get(position));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
 
 
 

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/profile"
+        android:title="الملف الشخصي" />
+    <item android:id="@+id/add_client"
+        android:title="إضافة عميل" />
+    <item android:id="@+id/clientaccounting"
+        android:title="كشف حساب عميل" />
+    <item android:id="@+id/add_salary"
+        android:title="إضافة سند قبض" />
+    <item android:id="@+id/add_payment"
+        android:title="إضافة سند صرف" />
+    <item android:id="@+id/logout"
+        android:title="تسجيل خروج" />
+</menu>

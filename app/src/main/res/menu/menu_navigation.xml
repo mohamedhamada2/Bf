@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/home2"
+        android:title="عرض الفواتير"
+        android:icon="@drawable/receipt"/>
+    <item android:id="@+id/invoice_discount"
+        android:title="عرض المرتجعات"
+        android:icon="@drawable/discount_bill"/>
+    <item android:id="@+id/invoice_without_discount"
+        android:title="إضافة مرتجع"
+        android:icon="@drawable/invoice"/>
+    <item android:id="@+id/bills_of_month"
+        android:title="إضافة فاتورة"
+        android:icon="@drawable/calendar"/>
+</menu>

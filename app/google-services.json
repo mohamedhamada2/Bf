@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "269169696586",
+    "project_id": "bfzidan",
+    "storage_bucket": "bfzidan.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:269169696586:android:929b3013207ad96f466bb3",
+        "android_client_info": {
+          "package_name": "com.mz.bf"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "269169696586-ijmdu51t0eaf02jko2p3bf1m3kntk6f7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mz.bf",
+            "certificate_hash": "4485a3234106b1961fa97f11595d1745db1517d1"
+          }
+        },
+        {
+          "client_id": "269169696586-8h4sqgfgui56cj5qrrqok0eisdt604o9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDekQNlKoCl_ILck-sgrDTOqBkI9wwqvSc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "269169696586-8h4sqgfgui56cj5qrrqok0eisdt604o9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -32,7 +32,7 @@
         android:theme="@style/Theme.Bf"
         tools:replace="android:theme">
         <activity
-            android:name=".PrintBillActivity"
+            android:name=".uis.activity_print_bill.PrintBillActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity2"

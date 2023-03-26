@@ -13,8 +13,11 @@ import com.mz.bf.data.DatabaseClass;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,6 +31,7 @@ public class BillsAdapter extends RecyclerView.Adapter<BillsAdapter.BillsHolder>
     String product_name,product_price,product_amount,type_id,discount,bonous,product_id;
     Double total_price;
     DatabaseClass databaseClass;
+    DecimalFormat df;
     public BillsAdapter(List<FatoraDetail> fatoraDetailList, Context context, AddReturnsFragment billsFragment) {
         this.fatoraDetailList = fatoraDetailList;
         this.context = context;
@@ -159,6 +163,7 @@ public class BillsAdapter extends RecyclerView.Adapter<BillsAdapter.BillsHolder>
         }
 
         public void setData(FatoraDetail fatoraDetail) {
+            df = new DecimalFormat("0.00",new DecimalFormatSymbols(Locale.US));
             product_id = fatoraDetail.getProduct_id_fk();
             typeslist = new ArrayList<>();
             typeslist.add("قطاعي");
@@ -172,8 +177,8 @@ public class BillsAdapter extends RecyclerView.Adapter<BillsAdapter.BillsHolder>
             product_name = fatoraDetail.getProduct_name();
             et_product_name.setText(product_name);
             et_product_price.setText(product_price);
-            et_product_amount.setText(product_amount);
-            et_product_total_price.setText(total_price + "");
+            et_product_amount.setText(df.format(Double.parseDouble(product_amount)));
+            et_product_total_price.setText(df.format(total_price));
         }
     }
 }

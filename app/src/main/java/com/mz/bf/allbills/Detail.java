@@ -79,6 +79,29 @@ public class Detail {
     @SerializedName("time")
     @Expose
     private String time;
+    @SerializedName("one_sell_price")
+    @Expose
+    private String one_price_sell;
+
+    public String getOne_price_sell() {
+        return one_price_sell;
+    }
+
+    public void setOne_price_sell(String one_price_sell) {
+        this.one_price_sell = one_price_sell;
+    }
+
+    public String getProduct_code() {
+        return product_code;
+    }
+
+    public void setProduct_code(String product_code) {
+        this.product_code = product_code;
+    }
+
+    @SerializedName("product_code")
+    @Expose
+    private String product_code;
 
     public String getId() {
         return id;

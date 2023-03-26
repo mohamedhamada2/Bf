@@ -4,12 +4,23 @@
         android:title="الملف الشخصي" />
     <item android:id="@+id/add_client"
         android:title="إضافة عميل" />
+    <item android:id="@+id/clients"
+        android:title="عرض العملاء" />
     <item android:id="@+id/clientaccounting"
         android:title="كشف حساب عميل" />
     <item android:id="@+id/add_salary"
-        android:title="إضافة سند قبض" />
+        android:title="إضافة سند" />
     <item android:id="@+id/add_payment"
-        android:title="إضافة سند صرف" />
+        android:title="عرض السندات" />
+    <item android:id="@+id/add_visit"
+        android:title="إضافة زيارة" />
+    <item android:id="@+id/get_visits"
+        android:title="عرض الزيارات" />
+    <item android:id="@+id/products"
+        android:title="المخزون" />
+    <item android:id="@+id/safe"
+        android:title="الخزنة" />
     <item android:id="@+id/logout"
         android:title="تسجيل خروج" />
+
 </menu>

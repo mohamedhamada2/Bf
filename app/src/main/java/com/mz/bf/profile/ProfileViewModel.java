@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.widget.Toast;
 
 import com.mz.bf.Utilities.Utilities;
+import com.mz.bf.api.CodeSharedPreferance;
 import com.mz.bf.api.GetDataService;
 import com.mz.bf.api.RetrofitClientInstance;
 import com.mz.bf.authentication.LoginModel;
@@ -18,15 +19,24 @@ import retrofit2.Response;
 public class ProfileViewModel {
     Context context;
     ProfileActivity profileActivity;
+    CodeSharedPreferance codeSharedPreferance;
+    String base_url;
 
     public ProfileViewModel(Context context) {
         this.context = context;
         profileActivity = (ProfileActivity) context;
+        codeSharedPreferance = CodeSharedPreferance.getInstance();
+        if (codeSharedPreferance.Get_UserData(context) == null){
+            base_url = "https://b.f.e.one-click.solutions/";
+        }else {
+
+            base_url = codeSharedPreferance.Get_UserData(context).getRecords().getUrl();
+        }
     }
 
     public void getUserData(String user_id) {
         if (Utilities.isNetworkAvailable(context)){
-            GetDataService getDataService = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
+            GetDataService getDataService = RetrofitClientInstance.getRetrofitInstance(context,base_url).create(GetDataService.class);
             Call<LoginModel> call = getDataService.get_user_data(user_id);
             call.enqueue(new Callback<LoginModel>() {
                 @Override
@@ -52,7 +62,7 @@ public class ProfileViewModel {
         RequestBody rb_password= Utilities.getRequestBodyText(password+"");
         MultipartBody.Part img = Utilities.getMultiPart(context, filepath, "img");
         if (Utilities.isNetworkAvailable(context)) {
-            GetDataService getDataService = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
+            GetDataService getDataService = RetrofitClientInstance.getRetrofitInstance(context,base_url).create(GetDataService.class);
             Call<LoginModel> call = getDataService.update_data_with_img(rb_user_id,rb_name,rb_password,img);
             call.enqueue(new Callback<LoginModel>() {
                 @Override
@@ -74,7 +84,7 @@ public class ProfileViewModel {
 
     public void update_user_without_img(String user_id, String name, String password) {
         if (Utilities.isNetworkAvailable(context)){
-            GetDataService getDataService = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
+            GetDataService getDataService = RetrofitClientInstance.getRetrofitInstance(context,base_url).create(GetDataService.class);
             Call<LoginModel> call = getDataService.update_data_without_img(user_id,name,password);
             call.enqueue(new Callback<LoginModel>() {
                 @Override

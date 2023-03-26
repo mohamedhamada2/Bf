@@ -11,7 +11,10 @@ import com.mz.bf.allbills.Fatora;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.List;
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +23,7 @@ public class AllBillsAdapter extends RecyclerView.Adapter <AllBillsAdapter.AllBi
     List<Fatora> fatoraList;
     Context context;
     ReturnsFragment allBillsFragment;
+    DecimalFormat df;
 
     public AllBillsAdapter(List<Fatora> fatoraList, Context context, ReturnsFragment allBillsFragment) {
         this.fatoraList = fatoraList;
@@ -64,7 +68,8 @@ public class AllBillsAdapter extends RecyclerView.Adapter <AllBillsAdapter.AllBi
         }
 
         public void setData(Fatora fatora) {
-            txt_total.setText(fatora.getFatoraCostAfterDiscount());
+            df = new java.text.DecimalFormat("0.00",new DecimalFormatSymbols(Locale.US));
+            txt_total.setText(df.format(Double.parseDouble(fatora.getFatoraCostAfterDiscount())));
             txt_client.setText(fatora.getClientName());
             txt_bill_date.setText(fatora.getDate());
             txt_bill_num.setText(fatora.getRkmFatora());

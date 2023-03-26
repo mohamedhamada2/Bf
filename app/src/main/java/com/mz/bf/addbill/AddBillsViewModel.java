@@ -2,13 +2,17 @@ package com.mz.bf.addbill;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.mz.bf.Utilities.Utilities;
 import com.mz.bf.addclient.SuccessModel;
+import com.mz.bf.api.CodeSharedPreferance;
 import com.mz.bf.api.GetDataService;
 import com.mz.bf.api.RetrofitClientInstance;
+import com.mz.bf.uis.activity_print_bill.PrintActivity;
+import com.mz.bf.uis.activity_print_bill.PrintBillActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,96 +26,23 @@ public class AddBillsViewModel {
     BillsFragment billsFragment;
     List<String> maintitlelist,subtitlelist,warehousestitlelist,typelist,paid_list;
     List<SpinnerModel> main_list,sub_list,ware_houses_list;
+    CodeSharedPreferance codeSharedPreferance;
+    String base_url;
     public AddBillsViewModel(Context context, BillsFragment billsFragment) {
         this.context = context;
         this.billsFragment = billsFragment;
-    }
-
-    public void get_main_branches() {
-        maintitlelist = new ArrayList<>();
-        if (Utilities.isNetworkAvailable(context)){
-            GetDataService getDataService = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
-            Call<List<SpinnerModel>> call = getDataService.get_main_branches();
-            call.enqueue(new Callback<List<SpinnerModel>>() {
-                @Override
-                public void onResponse(Call<List<SpinnerModel>> call, Response<List<SpinnerModel>> response) {
-                    if (response.isSuccessful()){
-                        main_list = response.body();
-                        for (SpinnerModel spinnerModel:main_list){
-                            maintitlelist.add(spinnerModel.getTitle());
-                        }
-                        try {
-                            billsFragment.setmainsspinnerData(maintitlelist,main_list);
-                        }catch (Exception e){
-                            Log.e("error",e.getMessage());
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<List<SpinnerModel>> call, Throwable t) {
-
-                }
-            });
+        codeSharedPreferance = CodeSharedPreferance.getInstance();
+        if (codeSharedPreferance.Get_UserData(context) == null){
+            base_url = "https://b.f.e.one-click.solutions/";
+        }else {
+            base_url = codeSharedPreferance.Get_UserData(context).getRecords().getUrl();
         }
     }
-
-    public void get_sub_branches(String main_branch_id) {
-        subtitlelist = new ArrayList<>();
-        if (Utilities.isNetworkAvailable(context)){
-            GetDataService getDataService = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
-            Call<List<SpinnerModel>> call = getDataService.get_sub_branches(main_branch_id);
-            call.enqueue(new Callback<List<SpinnerModel>>() {
-                @Override
-                public void onResponse(Call<List<SpinnerModel>> call, Response<List<SpinnerModel>> response) {
-                    if (response.isSuccessful()){
-                        sub_list = response.body();
-                        for (SpinnerModel spinnerModel:sub_list){
-                            subtitlelist.add(spinnerModel.getTitle());
-                        }
-                        billsFragment.setsubspinnerData(subtitlelist,sub_list);
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<List<SpinnerModel>> call, Throwable t) {
-
-                }
-            });
-        }
-    }
-
-    public void getwarehouses(String sub_branch_id) {
-        Toast.makeText(context, "hello", Toast.LENGTH_SHORT).show();
-        warehousestitlelist = new ArrayList<>();
-        if (Utilities.isNetworkAvailable(context)){
-            GetDataService getDataService = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
-            Call<List<SpinnerModel>> call = getDataService.get_warehouses(sub_branch_id);
-            call.enqueue(new Callback<List<SpinnerModel>>() {
-                @Override
-                public void onResponse(Call<List<SpinnerModel>> call, Response<List<SpinnerModel>> response) {
-                    if (response.isSuccessful()){
-                        ware_houses_list = response.body();
-                        for (SpinnerModel spinnerModel:ware_houses_list){
-                            warehousestitlelist.add(spinnerModel.getTitle());
-                        }
-                        billsFragment.setwarehousesspinnerData(warehousestitlelist,ware_houses_list);
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<List<SpinnerModel>> call, Throwable t) {
-
-                }
-            });
-        }
-    }
-
 
     public void getTypes() {
         typelist = new ArrayList<>();
-        typelist.add("قطاعي");
         typelist.add("جملة");
+        typelist.add("قطاعي");
         billsFragment.setypespinner(typelist);
     }
 
@@ -124,7 +55,7 @@ public class AddBillsViewModel {
 
     public void getBillnum() {
         if (Utilities.isNetworkAvailable(context)){
-            GetDataService getDataService = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
+            GetDataService getDataService = RetrofitClientInstance.getRetrofitInstance(context,base_url).create(GetDataService.class);
             Call<LastBill> call = getDataService.get_last_bill();
             call.enqueue(new Callback<LastBill>() {
                 @Override
@@ -142,7 +73,7 @@ public class AddBillsViewModel {
         }
     }
 
-    public void add_bill(String user_id, String bill_num, String bill_date, String pay_id, String s2, String client_id, String main_branch_id, String sub_branch_id, String ware_houses_id, Double totalPrice, String discount, String paid, String remain, String byan, List<FatoraDetail> fatoraDetailList) {
+    public void add_bill(String user_id, String bill_num, String bill_date, String pay_id, String s2, String client_id, String main_branch_id, String sub_branch_id, String ware_houses_id,String price_before_discount ,String totalPrice, String discount, String paid, String remain, String byan, List<FatoraDetail> fatoraDetailList) {
         Bill bill = new Bill();
         bill.setUserId(user_id);
         bill.setFatoraDate(bill_date);
@@ -152,8 +83,8 @@ public class AddBillsViewModel {
         bill.setMainBranchIdFk(main_branch_id);
         bill.setSubBranchIdFk(sub_branch_id);
         bill.setStorageIdFk(ware_houses_id);
-        bill.setFatoraCostBeforeDiscount(totalPrice+"");
-        bill.setDiscount("0");
+        bill.setFatoraCostBeforeDiscount(price_before_discount);
+        bill.setDiscount(discount);
         bill.setFatoraCostAfterDiscount(totalPrice+"");
         bill.setPaid(paid);
         bill.setRemain(remain);
@@ -163,7 +94,7 @@ public class AddBillsViewModel {
             ProgressDialog pd = new ProgressDialog(context);
             pd.setMessage("تحميل ...");
             pd.show();
-            GetDataService getDataService = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
+            GetDataService getDataService = RetrofitClientInstance.getRetrofitInstance(context,base_url).create(GetDataService.class);
             Call<SuccessModel> call = getDataService.add_bill(bill);
             call.enqueue(new Callback<SuccessModel>() {
                 @Override
@@ -171,7 +102,9 @@ public class AddBillsViewModel {
                     if (response.isSuccessful()){
                         if (response.body().getSuccess()==1){
                             pd.dismiss();
-                            billsFragment.DeleteProducts();
+                            billsFragment.DeleteProducts(response.body().getFatora_id());
+                            //Log.e("kkkk",response.body().getFatora_id());
+                            //Toast.makeText(context,response.body().getFatora_id(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -186,7 +119,7 @@ public class AddBillsViewModel {
 
     public void get_client_discount(String client_id) {
         if (Utilities.isNetworkAvailable(context)){
-            GetDataService getDataService = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
+            GetDataService getDataService = RetrofitClientInstance.getRetrofitInstance(context,base_url).create(GetDataService.class);
             Call<ClientDiscount> call = getDataService.get_client_discount(client_id);
             call.enqueue(new Callback<ClientDiscount>() {
                 @Override

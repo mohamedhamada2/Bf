@@ -7,6 +7,9 @@ import com.mz.bf.addbill.ClientDiscount;
 import com.mz.bf.addclient.City;
 import com.mz.bf.addclient.Govern;
 import com.mz.bf.addclient.SuccessModel;
+import com.mz.bf.addpayment.SandModel;
+import com.mz.bf.addsalary.RKM;
+import com.mz.bf.addvisit.VisitModel;
 import com.mz.bf.allbills.AllBillsModel;
 import com.mz.bf.allbills.BillDetailsModel;
 import com.mz.bf.authentication.LoginModel;
@@ -15,6 +18,10 @@ import com.mz.bf.addbill.ClientModel;
 import com.mz.bf.addbill.LastBill;
 import com.mz.bf.addbill.ProductModel;
 import com.mz.bf.addbill.SpinnerModel;
+import com.mz.bf.client_safe.SafeModel;
+import com.mz.bf.clients.ClientLocation;
+import com.mz.bf.code.Code;
+import com.mz.bf.uis.activity_print_bill.EsalModel;
 
 import java.util.List;
 
@@ -82,8 +89,8 @@ public interface GetDataService{
     Call<List<SpinnerModel>> get_warehouses(@Field("sub_branch_id_fk")String sub_branch_id_fk);
 
     @FormUrlEncoded
-    @POST("Api/get_products_by_store")
-    Call<ProductModel> get_all_products(@Field("page")Integer page,@Field("storage_id_fk")String storage_id_fk);
+    @POST("Api/get_products_by_car")
+    Call<ProductModel> get_all_products(@Field("page")Integer page,@Field("user_id_fk")String user_id_fk,@Field("car_id_fk")String car_id_fk);
 
     @GET("Api/get_last_rkm")
     Call<LastBill> get_last_bill();
@@ -96,7 +103,7 @@ public interface GetDataService{
 
     @FormUrlEncoded
     @POST("Api/get_mandoub_fatoras")
-    Call<AllBillsModel> get_bills(@Field("user_id")String user_id, @Field("page")Integer page);
+    Call<AllBillsModel> get_bills(@Field("user_id")String user_id, @Field("page")Integer page,@Field("from_date")String from_date,@Field("to_date")String to_date,@Field("client_id_fk")String client_id,@Field("rkm_fatora")String rkm_fatora);
 
     @FormUrlEncoded
     @POST("Api/get_fatora_details")
@@ -122,10 +129,68 @@ public interface GetDataService{
     @FormUrlEncoded
     @POST("Api/search_product")
     Call<ProductModel> search_product(@Field("page")Integer page,
-                                      @Field("storage_id_fk")String storage_id_fk,
-                                      @Field("search_word")String search_word);
+                                      @Field("car_id_fk")String car_id_fk,
+                                      @Field("search_word")String search_word,
+                                      @Field("user_id")String user_id);
     @FormUrlEncoded
     @POST("Api/search_clients")
     Call<ClientModel> search_clients(@Field("user_id")String user_id,@Field("search_word")String search_word,@Field("page")Integer page);
+
+    @FormUrlEncoded
+    @POST("Api/add_sand")
+    Call<SuccessModel> add_sand(@Field("type")String type,
+                                @Field("user_id_fk")String user_id,
+                                @Field("date_esal")String date_esal,
+                                @Field("client_id_fk")String client_id_fk,
+                                @Field("value")String value,
+                                @Field("notes")String notes);
+
+    @GET("Api/get_rkm_esal")
+    Call<RKM> get_rkm();
+
+    @FormUrlEncoded
+    @POST("Api/get_all_sandat")
+    Call<SandModel> get_all_sandat(@Field("user_id")String user_id,
+                                   @Field("type")String type,
+                                   @Field("page")Integer page,
+                                   @Field("from_date")String from_date,
+                                   @Field("to_date")String to_dt,
+                                   @Field("client_id_fk")String client_id);
+
+    @FormUrlEncoded
+    @POST("Api/add_visit")
+    Call<SuccessModel> add_visit(@Field("client_id_fk")String client_id_fk,
+                                 @Field("lat_map")String lat_map,
+                                 @Field("long_map")String long_map,
+                                 @Field("notes")String notes,
+                                 @Field("user_id_fk")String user_id_fk);
+    @FormUrlEncoded
+    @POST("Api/get_user_visit")
+    Call<VisitModel> get_all_visits(@Field("user_id")String user_id,
+                                    @Field("page")Integer page);
+
+    @FormUrlEncoded
+    @POST("Api/clients_locations")
+    Call<ClientLocation> get_all_clients(@Field("user_id")String user_id,
+                                         @Field("page")Integer page,
+                                         @Field("search_word")String search);
+
+    @FormUrlEncoded
+    @POST("Api/update_client_location")
+    Call<SuccessModel> update_location(@Field("user_id_fk")String user_id_fk,
+                                       @Field("client_id_fk")String client_id_fk,
+                                       @Field("lat")String lat,
+                                       @Field("long")String lon);
+
+    @FormUrlEncoded
+    @POST("Api/get_esal_detais")
+    Call<EsalModel> get_esal_details(@Field("esal_id")String esal_id);
+
+    @FormUrlEncoded
+    @POST("Api/get_mandoub_safe")
+    Call<SafeModel> get_mandoub_safe(@Field("user_id_fk")String user_id, @Field("day_date")String day_date);
+    @FormUrlEncoded
+    @POST("Api/get_url_by_code")
+    Call<Code> get_code(@Field("code")String code);
 }
 

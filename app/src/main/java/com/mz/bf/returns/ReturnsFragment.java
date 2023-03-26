@@ -2,6 +2,7 @@ package com.mz.bf.returns;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -20,11 +21,14 @@ import com.mz.bf.allbills.AllBillsAdapter;
 import com.mz.bf.allbills.BillDetailsAdapter;
 import com.mz.bf.allbills.BillDetailsModel;
 import com.mz.bf.allbills.Fatora;
+import com.mz.bf.api.CodeSharedPreferance;
 import com.mz.bf.api.GetDataService;
 import com.mz.bf.api.MySharedPreference;
 import com.mz.bf.api.RetrofitClientInstance;
 import com.mz.bf.authentication.LoginModel;
 import com.mz.bf.databinding.FragmentReturnsBinding;
+import com.mz.bf.uis.activity_print_bill.PrintActivity;
+import com.mz.bf.uis.activity_print_bill.PrintBillActivity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -50,6 +54,8 @@ public class ReturnsFragment extends Fragment {
     int view_threshold = 20;
     int page =1 ;
     Dialog dialog3;
+    String base_url;
+    CodeSharedPreferance codeSharedPreferance;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -62,6 +68,13 @@ public class ReturnsFragment extends Fragment {
         fragmentHomeBinding.setReturnsviewmodel(allBillsViewModel);
         allBillsViewModel.get_all_bills(1,user_id);
         View view = fragmentHomeBinding.getRoot();
+        codeSharedPreferance = CodeSharedPreferance.getInstance();
+        if (codeSharedPreferance.Get_UserData(getActivity()) == null){
+            base_url = "https://b.f.e.one-click.solutions/";
+        }else {
+
+            base_url = codeSharedPreferance.Get_UserData(getActivity()).getRecords().getUrl();
+        }
         fragmentHomeBinding.allBillsRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -112,7 +125,7 @@ public class ReturnsFragment extends Fragment {
         txt_bill_num.setText(fatora.getRkmFatora());
         txt_client_name.setText(fatora.getClientName());
         if (Utilities.isNetworkAvailable(getActivity())){
-            GetDataService getDataService = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
+            GetDataService getDataService = RetrofitClientInstance.getRetrofitInstance(getActivity(),base_url).create(GetDataService.class);
             Call<BillDetailsModel> call = getDataService.get_bill_details2(fatora.getId());
             call.enqueue(new Callback<BillDetailsModel>() {
                 @Override
@@ -144,6 +157,24 @@ public class ReturnsFragment extends Fragment {
         //billsAdapter = new BillsAdapter(fatoraDetailList,getContext(),this);
 
         ImageView cancel_img = view2.findViewById(R.id.cancel_img);
+        ImageView print_img = view2.findViewById(R.id.print_img);
+        print_img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), PrintBillActivity.class);
+                intent.putExtra("flag",2);
+                intent.putExtra("rkm",fatora.getRkmFatora());
+                intent.putExtra("client_name",fatora.getClientName());
+                intent.putExtra("id",fatora.getId());
+                intent.putExtra("total_before",fatora.getFatoraCostBeforeDiscount());
+                intent.putExtra("total_after",fatora.getFatoraCostAfterDiscount());
+                intent.putExtra("discount",fatora.getDiscount());
+                intent.putExtra("date",fatora.getDate());
+                intent.putExtra("paid",fatora.getPaid());
+                intent.putExtra("remain",fatora.getRemain());
+                startActivity(intent);
+            }
+        });
         builder.setView(view2);
         dialog3 = builder.create();
         dialog3.show();

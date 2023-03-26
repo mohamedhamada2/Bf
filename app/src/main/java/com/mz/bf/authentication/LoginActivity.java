@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.mz.bf.R;
+import com.mz.bf.api.RetrofitClientInstance;
 import com.mz.bf.databinding.ActivityLoginBinding;
 
 public class LoginActivity extends AppCompatActivity {
@@ -22,6 +23,13 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel = new LoginViewModel(this);
         activityLoginBinding.setLoginviewmodel(loginViewModel);
     }
+
+    @Override
+    public void onBackPressed() {
+        RetrofitClientInstance.clear(this);
+        super.onBackPressed();
+    }
+
     public void Login(View view) {
         //startActivity(new Intent(LoginActivity.this, MainActivity.class));
         Validation();

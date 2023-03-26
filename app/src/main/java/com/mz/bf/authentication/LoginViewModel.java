@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import com.mz.bf.MainActivity;
 import com.mz.bf.Utilities.Utilities;
+import com.mz.bf.api.CodeSharedPreferance;
 import com.mz.bf.api.GetDataService;
 import com.mz.bf.api.MySharedPreference;
 import com.mz.bf.api.RetrofitClientInstance;
@@ -20,16 +21,26 @@ public class LoginViewModel {
     LoginActivity loginActivity;
     LoginModel loginModel;
     MySharedPreference mprefs;
+    CodeSharedPreferance codeSharedPreferance;
+    String base_url;
 
     public LoginViewModel(Context context) {
         this.context = context;
         loginActivity = (LoginActivity) context;
+
     }
 
     public void login(String username, String password) {
+        codeSharedPreferance = CodeSharedPreferance.getInstance();
+        if (codeSharedPreferance.Get_UserData(context) == null){
+            base_url = "https://b.f.e.one-click.solutions/";
+        }else {
+
+            base_url = codeSharedPreferance.Get_UserData(context).getRecords().getUrl();
+        }
         mprefs = MySharedPreference.getInstance();
         if (Utilities.isNetworkAvailable(context)){
-            GetDataService getDataService = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
+            GetDataService getDataService = RetrofitClientInstance.getRetrofitInstance(context,base_url).create(GetDataService.class);
             Call<LoginModel> call = getDataService.login_user(username,password);
             call.enqueue(new Callback<LoginModel>() {
                 @Override

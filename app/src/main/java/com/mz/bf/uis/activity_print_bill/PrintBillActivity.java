@@ -4,9 +4,11 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -24,9 +26,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Toast;
 
+import com.anggastudio.printama.Printama;
 import com.mz.bf.R;
+import com.mz.bf.allbills.BillDetailsAdapter;
+import com.mz.bf.allbills.BillDetailsModel;
+import com.mz.bf.allbills.Record;
+import com.mz.bf.api.MySharedPreference;
+import com.mz.bf.authentication.LoginModel;
 import com.mz.bf.databinding.ActivityPrintBillBinding;
 import com.mz.bf.databinding.DialogBluthoosBinding;
 import com.mz.bf.printer.PrintPicture;
@@ -35,6 +44,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -56,15 +66,24 @@ public class PrintBillActivity extends AppCompatActivity {
     private Thread workerThread;
     private AlertDialog dialog;
     private  int req;
-
+    String fatora_id,client_name,user_name,total_price,rkm_fatora,total_after,date,discount,paid,remain;
+    MySharedPreference mySharedPreference;
+    LoginModel loginModel;
+    PrintViewModel printViewModel;
+    Integer flag;
+    DecimalFormat df;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this,R.layout.activity_print_bill);
+        df = new DecimalFormat("#.00");
+        printViewModel = new PrintViewModel(this);
+        binding.setPrintviewmodel(printViewModel);
         initViews();
     }
 
     private void initViews() {
+        getDataIntent();
         permissions = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), isGranted->{
             if (!isGranted.containsValue(false)){
                 findBT();
@@ -91,6 +110,24 @@ public class PrintBillActivity extends AppCompatActivity {
 
         binding.btnPrint.setOnClickListener(view -> checkBluetoothPermission());
 
+
+    }
+
+    private void getDataIntent() {
+        flag = getIntent().getIntExtra("flag", 0);
+        mySharedPreference = MySharedPreference.getInstance();
+        loginModel = mySharedPreference.Get_UserData(this);
+        user_name = loginModel.getUserName();
+        if (flag == 1) {
+            fatora_id = getIntent().getStringExtra("id");
+            Log.e("love",fatora_id);
+            binding.txtFatora.setText("إذن إستلام بضاعة");
+            printViewModel.get_fatora(fatora_id);
+        } else if (flag == 2) {
+            fatora_id = getIntent().getStringExtra("id");
+            binding.txtFatora.setText("إذن مرتجع");
+            printViewModel.get_headback(fatora_id);
+        }
 
     }
 
@@ -130,16 +167,16 @@ public class PrintBillActivity extends AppCompatActivity {
             Toast.makeText(this, "Printing", Toast.LENGTH_SHORT).show();
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-            double h = bitmap.getWidth() / 576.0;
+            double h = bitmap.getWidth() / 357.0;
             double dstH = bitmap.getHeight() / h;
 
 
-            Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, 576, (int) dstH, true);
+            Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, 357, (int) dstH, true);
 
 
             int width = newBitmap.getWidth();
             int height = newBitmap.getHeight();
-            int newWidth = (width/8+1)*8;
+            int newWidth = (width/5+1)*5;
             float scaleWidth = ((float) newWidth) / width;
             Matrix matrix = new Matrix();
             matrix.postScale(scaleWidth, 1);
@@ -161,8 +198,11 @@ public class PrintBillActivity extends AppCompatActivity {
 
 
         }
-
-
+        /*View view=findViewById(R.id.scrollViewBluetooth);
+        Printama.with(this).connect(printama->{
+            printama.printFromView(view);
+            printama.close();
+        });*/
     }
 
 
@@ -335,4 +375,63 @@ public class PrintBillActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    public void setrecyclerView(BillDetailsModel body) {
+        try {
+            binding.txtPreviousRasied.setText(df.format(Double.parseDouble(body.getPrevious_rasied()))+"");
+            binding.txtNowRasied.setText(df.format(Double.parseDouble(body.getNow_rasied()))+"");
+        }catch (Exception e){
+            binding.txtPreviousRasied.setText(body.getPrevious_rasied());
+            binding.txtNowRasied.setText(body.getNow_rasied()+"");
+        }
+        BillDetailsAdapter billDetailsAdapter = new BillDetailsAdapter(body.getDetails(),this);
+        binding.orderDetailsRecycler.setAdapter(billDetailsAdapter);
+        RecyclerView.LayoutManager layoutmanager = new LinearLayoutManager(this);
+        binding.orderDetailsRecycler.setLayoutManager(layoutmanager);
+        binding.orderDetailsRecycler.setHasFixedSize(true);
+        binding.orderDetailsRecycler.setVisibility(View.VISIBLE);
+    }
+
+    public void setData(Record record) {
+        client_name = record.getClientName();
+        total_price = record.getFatoraCostBeforeDiscount();
+        total_after = record.getFatoraCostAfterDiscount();
+        rkm_fatora = record.getRkmFatora();
+        date = record.getDate();
+        discount = record.getDiscount();
+        paid = record.getPaid();
+        remain = record.getRemain();
+        binding.txtClientName.setText(client_name);
+        binding.txtOrderNum.setText(rkm_fatora);
+        binding.txtUserName.setText(user_name);
+        binding.txtOrderDate.setText(date);
+        if (flag == 2){
+            binding.total.setText("الاجمالي ");
+            binding.relative2.setVisibility(View.GONE);
+            binding.relative3.setVisibility(View.GONE);
+            binding.relative4.setVisibility(View.GONE);
+            binding.relative5.setVisibility(View.GONE);
+            binding.txtTotal.setText(df.format(Double.parseDouble(total_price))+"");
+        }else {
+            if (!discount.equals("0")){
+                binding.total.setVisibility(View.VISIBLE);
+                binding.txtTotal.setVisibility(View.VISIBLE);
+                binding.discount.setVisibility(View.VISIBLE);
+                binding.txtDiscount.setVisibility(View.VISIBLE);
+                binding.txtTotal.setText(df.format(Double.parseDouble(total_price))+"");
+                binding.txtTotalAfterDiscount.setText(df.format(Double.parseDouble(total_after))+"");
+                binding.txtPaid.setText(paid);
+                binding.txtRemain.setText(remain);
+                binding.txtDiscount.setText(discount);
+            }else {
+                binding.total.setVisibility(View.GONE);
+                binding.txtTotal.setVisibility(View.GONE);
+                binding.discount.setVisibility(View.GONE);
+                binding.txtDiscount.setVisibility(View.GONE);
+                binding.totalAfterDiscount.setText("الاجمالي");
+                binding.txtTotalAfterDiscount.setText(df.format(Double.parseDouble(total_after))+"");
+                binding.txtPaid.setText(paid);
+                binding.txtRemain.setText(remain);
+            }
+        }
+    }
 }

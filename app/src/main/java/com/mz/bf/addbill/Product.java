@@ -4,75 +4,47 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Product {
+    @SerializedName("sum")
+    @Expose
+    private String sum;
     @SerializedName("id")
     @Expose
     private String id;
-    @SerializedName("product_code")
-    @Expose
-    private String productCode;
     @SerializedName("product_name")
     @Expose
     private String productName;
-    @SerializedName("flow_line")
+    @SerializedName("product_code")
     @Expose
-    private Object flowLine;
-    @SerializedName("frame")
-    @Expose
-    private Object frame;
-    @SerializedName("fac")
-    @Expose
-    private Object fac;
-    @SerializedName("category_id_fk")
-    @Expose
-    private Object categoryIdFk;
-    @SerializedName("factory_price")
-    @Expose
-    private String factoryPrice;
-    @SerializedName("unit_id_fk")
-    @Expose
-    private Object unitIdFk;
+    private String productCode;
     @SerializedName("one_sell_price")
     @Expose
     private String oneSellPrice;
     @SerializedName("packet_sell_price")
     @Expose
-    private Object packetSellPrice;
-    @SerializedName("max_one_sell_price")
+    private String packetSellPrice;
+    @SerializedName("packet_rasied")
     @Expose
-    private Object maxOneSellPrice;
-    @SerializedName("max_packet_sell_price")
+    private Double packetRasied;
+    @SerializedName("one_rasied")
     @Expose
-    private Object maxPacketSellPrice;
-    @SerializedName("first_rasied")
+    private Double oneRasied;
+    @SerializedName("amount_sale")
     @Expose
-    private Object firstRasied;
-    @SerializedName("all_amount")
+    private Integer amountSale;
+    @SerializedName("car_amount_hadback")
     @Expose
-    private Object allAmount;
-    @SerializedName("main_branch_id_fk")
+    private Integer carAmountHadback;
+    @SerializedName("store_amount_hadback")
     @Expose
-    private String mainBranchIdFk;
-    @SerializedName("sub_branch_id_fk")
-    @Expose
-    private String subBranchIdFk;
-    @SerializedName("storage_id_fk")
-    @Expose
-    private Object storageIdFk;
-    @SerializedName("allowed_discount")
-    @Expose
-    private Object allowedDiscount;
-    @SerializedName("img")
-    @Expose
-    private Object img;
-    @SerializedName("date")
-    @Expose
-    private Object date;
-    @SerializedName("publisher")
-    @Expose
-    private Object publisher;
-    @SerializedName("deleted")
-    @Expose
-    private String deleted;
+    private Integer storeAmountHadback;
+
+    public String getSum() {
+        return sum;
+    }
+
+    public void setSum(String sum) {
+        this.sum = sum;
+    }
 
     public String getId() {
         return id;
@@ -80,14 +52,6 @@ public class Product {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getProductCode() {
-        return productCode;
-    }
-
-    public void setProductCode(String productCode) {
-        this.productCode = productCode;
     }
 
     public String getProductName() {
@@ -98,52 +62,12 @@ public class Product {
         this.productName = productName;
     }
 
-    public Object getFlowLine() {
-        return flowLine;
+    public String getProductCode() {
+        return productCode;
     }
 
-    public void setFlowLine(Object flowLine) {
-        this.flowLine = flowLine;
-    }
-
-    public Object getFrame() {
-        return frame;
-    }
-
-    public void setFrame(Object frame) {
-        this.frame = frame;
-    }
-
-    public Object getFac() {
-        return fac;
-    }
-
-    public void setFac(Object fac) {
-        this.fac = fac;
-    }
-
-    public Object getCategoryIdFk() {
-        return categoryIdFk;
-    }
-
-    public void setCategoryIdFk(Object categoryIdFk) {
-        this.categoryIdFk = categoryIdFk;
-    }
-
-    public String getFactoryPrice() {
-        return factoryPrice;
-    }
-
-    public void setFactoryPrice(String factoryPrice) {
-        this.factoryPrice = factoryPrice;
-    }
-
-    public Object getUnitIdFk() {
-        return unitIdFk;
-    }
-
-    public void setUnitIdFk(Object unitIdFk) {
-        this.unitIdFk = unitIdFk;
+    public void setProductCode(String productCode) {
+        this.productCode = productCode;
     }
 
     public String getOneSellPrice() {
@@ -154,107 +78,51 @@ public class Product {
         this.oneSellPrice = oneSellPrice;
     }
 
-    public Object getPacketSellPrice() {
+    public String getPacketSellPrice() {
         return packetSellPrice;
     }
 
-    public void setPacketSellPrice(Object packetSellPrice) {
+    public void setPacketSellPrice(String packetSellPrice) {
         this.packetSellPrice = packetSellPrice;
     }
 
-    public Object getMaxOneSellPrice() {
-        return maxOneSellPrice;
+    public Double getPacketRasied() {
+        return packetRasied;
     }
 
-    public void setMaxOneSellPrice(Object maxOneSellPrice) {
-        this.maxOneSellPrice = maxOneSellPrice;
+    public void setPacketRasied(Double packetRasied) {
+        this.packetRasied = packetRasied;
     }
 
-    public Object getMaxPacketSellPrice() {
-        return maxPacketSellPrice;
+    public Double getOneRasied() {
+        return oneRasied;
     }
 
-    public void setMaxPacketSellPrice(Object maxPacketSellPrice) {
-        this.maxPacketSellPrice = maxPacketSellPrice;
+    public void setOneRasied(Double oneRasied) {
+        this.oneRasied = oneRasied;
     }
 
-    public Object getFirstRasied() {
-        return firstRasied;
+    public Integer getAmountSale() {
+        return amountSale;
     }
 
-    public void setFirstRasied(Object firstRasied) {
-        this.firstRasied = firstRasied;
+    public void setAmountSale(Integer amountSale) {
+        this.amountSale = amountSale;
     }
 
-    public Object getAllAmount() {
-        return allAmount;
+    public Integer getCarAmountHadback() {
+        return carAmountHadback;
     }
 
-    public void setAllAmount(Object allAmount) {
-        this.allAmount = allAmount;
+    public void setCarAmountHadback(Integer carAmountHadback) {
+        this.carAmountHadback = carAmountHadback;
     }
 
-    public String getMainBranchIdFk() {
-        return mainBranchIdFk;
+    public Integer getStoreAmountHadback() {
+        return storeAmountHadback;
     }
 
-    public void setMainBranchIdFk(String mainBranchIdFk) {
-        this.mainBranchIdFk = mainBranchIdFk;
-    }
-
-    public String getSubBranchIdFk() {
-        return subBranchIdFk;
-    }
-
-    public void setSubBranchIdFk(String subBranchIdFk) {
-        this.subBranchIdFk = subBranchIdFk;
-    }
-
-    public Object getStorageIdFk() {
-        return storageIdFk;
-    }
-
-    public void setStorageIdFk(Object storageIdFk) {
-        this.storageIdFk = storageIdFk;
-    }
-
-    public Object getAllowedDiscount() {
-        return allowedDiscount;
-    }
-
-    public void setAllowedDiscount(Object allowedDiscount) {
-        this.allowedDiscount = allowedDiscount;
-    }
-
-    public Object getImg() {
-        return img;
-    }
-
-    public void setImg(Object img) {
-        this.img = img;
-    }
-
-    public Object getDate() {
-        return date;
-    }
-
-    public void setDate(Object date) {
-        this.date = date;
-    }
-
-    public Object getPublisher() {
-        return publisher;
-    }
-
-    public void setPublisher(Object publisher) {
-        this.publisher = publisher;
-    }
-
-    public String getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(String deleted) {
-        this.deleted = deleted;
+    public void setStoreAmountHadback(Integer storeAmountHadback) {
+        this.storeAmountHadback = storeAmountHadback;
     }
 }

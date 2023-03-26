@@ -3,25 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mz.bf">
 
-    <uses-feature android:name="android.hardware.camera" />
-
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.CAMERA2" />
-    <uses-permission android:name="android.permission.FLASHLIGHT" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
     <application
         android:name=".printer.ApplicationClass"
         android:allowBackup="true"
@@ -32,11 +13,22 @@
         android:theme="@style/Theme.Bf"
         tools:replace="android:theme">
         <activity
+            android:name=".code.CodeActivity"
+            android:exported="true" >
+        </activity>
+        <activity android:name=".client_safe.MandoubSafeActivity" />
+        <activity android:name=".products.ProductsActivityActivity" />
+        <activity android:name=".uis.activity_print_bill.PrintSandActivity" />
+        <activity android:name=".uis.activity_print_bill.PrintActivity" />
+        <activity
             android:name=".uis.activity_print_bill.PrintBillActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity2"
-            android:exported="true"></activity>
+            android:exported="true" />
+        <activity
+            android:name=".clients.ClientsActivity"
+            android:exported="true" />
         <activity
             android:name=".basket.BasketActivity"
             android:exported="true" />
@@ -73,6 +65,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".addvisit.VisitActivity" />
+        <activity android:name=".addvisit.AddVisitActivity" />
         <activity
             android:name=".authentication.LoginActivity"
             android:exported="true" />
@@ -92,7 +86,23 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-
     </application>
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_SCAN"
+        android:usesPermissionFlags="neverForLocation" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
 </manifest>

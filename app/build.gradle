@@ -9,9 +9,8 @@ android {
         applicationId "com.mz.bf"
         minSdkVersion 21
         targetSdkVersion 31
-        versionCode 6
-        versionName "1.5"
-
+        versionCode 43
+        versionName "5.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -41,6 +40,8 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
     implementation 'com.google.android.gms:play-services-maps:18.0.1'
+    implementation 'com.google.android.gms:play-services-base:18.0.1'
+    implementation 'com.google.android.gms:play-services-tasks:18.0.1'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
@@ -63,4 +64,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:21.1.0'
     implementation 'com.github.DantSu:ESCPOS-ThermalPrinter-Android:3.2.0'
     implementation 'com.github.mazenrashed:Printooth:1.3.1'
+    implementation 'com.github.anggastudio:Printama:0.9.7'
+    implementation 'io.nlopez.smartlocation:library:3.3.3'
+
 }

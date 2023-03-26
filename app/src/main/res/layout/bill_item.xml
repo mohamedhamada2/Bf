@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView android:layout_width="match_parent"
+<androidx.cardview.widget.CardView
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="@dimen/_5sdp"
@@ -24,7 +25,7 @@
                 android:fontFamily="@font/cairo_black"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12ssp"
-                android:text="إسم المنتج:"
+                android:text="كود الصنف:"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="@dimen/_5sdp"
                 android:layout_centerVertical="true"/>
@@ -141,7 +142,7 @@
                 android:text="حذف"
                 android:fontFamily="@font/cairo_bold"
                 android:textSize="@dimen/_14ssp"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:layout_marginEnd="@dimen/_2sdp"/>
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_update_bill"
@@ -153,6 +154,7 @@
                 android:fontFamily="@font/cairo_bold"
                 android:textSize="@dimen/_14ssp"
                 android:layout_weight="1"
+                android:visibility="gone"
                 android:layout_marginStart="@dimen/_2sdp"/>
         </LinearLayout>
     </LinearLayout>

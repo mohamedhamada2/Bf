@@ -18,4 +18,7 @@
         <item name="fontFamily">@font/cairo_bold</item>
         <item name="android:textSize">@dimen/_12ssp</item>
     </style>
+    <style name="menuStyle">
+        <item name="android:layoutDirection">rtl</item>
+    </style>
 </resources>

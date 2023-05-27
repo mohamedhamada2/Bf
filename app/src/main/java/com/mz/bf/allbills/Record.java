@@ -67,6 +67,18 @@ public class Record {
     @SerializedName("discount")
     @Expose
     private String discount;
+
+    public String getMandoub_discount() {
+        return mandoub_discount;
+    }
+
+    public void setMandoub_discount(String mandoub_discount) {
+        this.mandoub_discount = mandoub_discount;
+    }
+
+    @SerializedName("mandoub_discount")
+    @Expose
+    private String mandoub_discount;
     @SerializedName("paid")
     @Expose
     private String paid;

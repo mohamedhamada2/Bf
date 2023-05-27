@@ -75,7 +75,7 @@ public class Bill {
         this.mandoub_discount = mandoub_discount;
     }
 
-    @SerializedName("fatora_details")
+    @SerializedName("mandoub_discount")
     @Expose
     String mandoub_discount;
 

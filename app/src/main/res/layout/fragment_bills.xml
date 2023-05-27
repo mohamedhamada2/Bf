@@ -323,7 +323,7 @@
                         android:layout_marginLeft="@dimen/_10sdp"
                         android:background="@drawable/txt_login_background"
                         android:elevation="@dimen/_5sdp"
-                        android:inputType="number"
+                        android:inputType="numberDecimal"
                         android:textColorHint="@color/purple_500"
                         android:fontFamily="@font/cairo_semibold"
                         android:textSize="@dimen/_13ssp"

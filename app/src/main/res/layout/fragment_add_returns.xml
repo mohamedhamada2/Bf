@@ -361,7 +361,10 @@
                     android:gravity="center_vertical"
                     android:fontFamily="@font/cairo_semibold"
                     android:padding="@dimen/_3sdp"
-                    android:inputType="numberDecimal" />
+                    android:inputType="numberDecimal"
+                    android:editable="false"
+                    android:enabled="false"
+                    android:focusable="false"/>
                 <TextView
                     android:id="@+id/txt_remain2"
                     android:layout_width="match_parent"

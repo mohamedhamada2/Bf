@@ -216,7 +216,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_alignParentTop="true"
                         android:layout_marginRight="@dimen/_10sdp"
-                        android:text="قيمة الخصم"
+                        android:text="نسبة الخصم"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="18sp"
                         android:fontFamily="@font/tajawal_medium"/>
@@ -225,6 +225,36 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_toLeftOf="@+id/discount"
+                        android:textSize="18sp"
+                        android:textColor="#828282"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentTop="true"
+                        android:fontFamily="@font/tajawal_medium"/>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/relative11"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/_5sdp"
+                    android:layout_marginTop="@dimen/_5sdp">
+                    <TextView
+                        android:id="@+id/discount2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:text="قيمة الخصم الإضافي"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/tajawal_medium"/>
+                    <TextView
+                        android:id="@+id/txt_discount2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@+id/discount2"
                         android:textSize="18sp"
                         android:textColor="#828282"
                         android:layout_marginLeft="@dimen/_5sdp"

@@ -66,7 +66,7 @@ public class PrintBillActivity extends AppCompatActivity {
     private Thread workerThread;
     private AlertDialog dialog;
     private  int req;
-    String fatora_id,client_name,user_name,total_price,rkm_fatora,total_after,date,discount,paid,remain;
+    String fatora_id,client_name,user_name,total_price,rkm_fatora,total_after,date,discount,paid,remain,mandoub_discount;
     MySharedPreference mySharedPreference;
     LoginModel loginModel;
     PrintViewModel printViewModel;
@@ -390,12 +390,12 @@ public class PrintBillActivity extends AppCompatActivity {
         binding.orderDetailsRecycler.setHasFixedSize(true);
         binding.orderDetailsRecycler.setVisibility(View.VISIBLE);
     }
-
     public void setData(Record record) {
         client_name = record.getClientName();
         total_price = record.getFatoraCostBeforeDiscount();
         total_after = record.getFatoraCostAfterDiscount();
         rkm_fatora = record.getRkmFatora();
+        mandoub_discount = record.getMandoub_discount();
         date = record.getDate();
         discount = record.getDiscount();
         paid = record.getPaid();
@@ -410,8 +410,10 @@ public class PrintBillActivity extends AppCompatActivity {
             binding.relative3.setVisibility(View.GONE);
             binding.relative4.setVisibility(View.GONE);
             binding.relative5.setVisibility(View.GONE);
+            binding.relative11.setVisibility(View.GONE);
             binding.txtTotal.setText(df.format(Double.parseDouble(total_price))+"");
         }else {
+            binding.relative11.setVisibility(View.GONE);
             if (!discount.equals("0")){
                 binding.total.setVisibility(View.VISIBLE);
                 binding.txtTotal.setVisibility(View.VISIBLE);
@@ -422,6 +424,7 @@ public class PrintBillActivity extends AppCompatActivity {
                 binding.txtPaid.setText(paid);
                 binding.txtRemain.setText(remain);
                 binding.txtDiscount.setText(discount);
+                binding.txtDiscount2.setText(mandoub_discount);
             }else {
                 binding.total.setVisibility(View.GONE);
                 binding.txtTotal.setVisibility(View.GONE);
@@ -431,6 +434,7 @@ public class PrintBillActivity extends AppCompatActivity {
                 binding.txtTotalAfterDiscount.setText(df.format(Double.parseDouble(total_after))+"");
                 binding.txtPaid.setText(paid);
                 binding.txtRemain.setText(remain);
+                binding.txtDiscount2.setText(mandoub_discount);
             }
         }
     }

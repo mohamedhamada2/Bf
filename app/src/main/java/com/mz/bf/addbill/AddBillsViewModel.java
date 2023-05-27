@@ -103,6 +103,7 @@ public class AddBillsViewModel {
                     if (response.isSuccessful()){
                         if (response.body().getSuccess()==1){
                             pd.dismiss();
+                            Log.e("discount",mandoub_discount);
                             billsFragment.DeleteProducts(response.body().getFatora_id());
                             //Log.e("kkkk",response.body().getFatora_id());
                             //Toast.makeText(context,response.body().getFatora_id(), Toast.LENGTH_SHORT).show();

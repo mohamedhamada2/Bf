@@ -88,7 +88,7 @@ public class BillsFragment extends Fragment {
     Product product;
     Double amount_available;
     CodeSharedPreferance codeSharedPreferance;
-    String base_url;
+    String base_url,more_discount;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -110,6 +110,7 @@ public class BillsFragment extends Fragment {
         typelist = new ArrayList<>();
         paidlist = new ArrayList<>();
         type_id ="2";
+        fragmentBillsBinding.etDiscount2.setText("0");
         codeSharedPreferance = CodeSharedPreferance.getInstance();
         if (codeSharedPreferance.Get_UserData(getActivity()) == null){
             base_url = "https://b.f.e.one-click.solutions/";
@@ -387,11 +388,16 @@ public class BillsFragment extends Fragment {
         client_name = fragmentBillsBinding.etClientName.getText().toString();
         bill_num2 = fragmentBillsBinding.etBillNum.getText().toString();
         bill_date = fragmentBillsBinding.etBillDate.getText().toString();
+        if (fragmentBillsBinding.etDiscount2.getText().toString().equals("")){
+            more_discount = "0";
+        }else {
+            more_discount = fragmentBillsBinding.etDiscount2.getText().toString();
+        }
         if(!TextUtils.isEmpty(client_name)&&!TextUtils.isEmpty(bill_num2)&&!TextUtils.isEmpty(bill_date)&&!fatoraDetailList.isEmpty()){
             if (fragmentBillsBinding.etAfterDiscount.getText().equals("0")){
-                addBillsViewModel.add_bill(user_id,fragmentBillsBinding.etBillNum.getText().toString(),bill_date,pay_id,"",client_id,main_branch_id,sub_branch_id,ware_houses_id,df.format(Double.parseDouble(fragmentBillsBinding.etAllTotalPrice.getText().toString())),df.format(price_after_discount),"0",paid+"",remain+"","byan",fatoraDetailList,fragmentBillsBinding.etDiscount2.getText().toString());
+                addBillsViewModel.add_bill(user_id,fragmentBillsBinding.etBillNum.getText().toString(),bill_date,pay_id,"",client_id,main_branch_id,sub_branch_id,ware_houses_id,df.format(Double.parseDouble(fragmentBillsBinding.etAllTotalPrice.getText().toString())),df.format(price_after_discount),"0",paid+"",remain+"","byan",fatoraDetailList,more_discount);
             }else {
-                addBillsViewModel.add_bill(user_id,fragmentBillsBinding.etBillNum.getText().toString(),bill_date,pay_id,"",client_id,main_branch_id,sub_branch_id,ware_houses_id,df.format(Double.parseDouble(fragmentBillsBinding.etAllTotalPrice.getText().toString())),df.format(price_after_discount),fragmentBillsBinding.etDiscount.getText().toString(),paid+"",remain+"","byan",fatoraDetailList,fragmentBillsBinding.etDiscount2.getText().toString());
+                addBillsViewModel.add_bill(user_id,fragmentBillsBinding.etBillNum.getText().toString(),bill_date,pay_id,"",client_id,main_branch_id,sub_branch_id,ware_houses_id,df.format(Double.parseDouble(fragmentBillsBinding.etAllTotalPrice.getText().toString())),df.format(price_after_discount),fragmentBillsBinding.etDiscount.getText().toString(),paid+"",remain+"","byan",fatoraDetailList,more_discount);
             }
 
         }else {
@@ -1063,12 +1069,11 @@ public class BillsFragment extends Fragment {
         databaseClass.getDao().deleteAllproduct();
         getAllBills(fatoraDetailList);
         Toast.makeText(getActivity(), "تم إضافة الفاتورة بنجاح", Toast.LENGTH_SHORT).show();
-        /*getActivity().finish();
-        startActivity(getActivity().getIntent());*/
         Intent intent = new Intent(getActivity(), PrintBillActivity.class);
         intent.putExtra("flag",1);
         intent.putExtra("id",fatora_id);
         startActivity(intent);
+        getActivity().finish();
     }
 
     public void delete_product(FatoraDetail fatoraDetail) {

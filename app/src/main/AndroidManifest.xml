@@ -13,9 +13,14 @@
         android:theme="@style/Theme.Bf"
         tools:replace="android:theme">
         <activity
+            android:name=".masroufat.MasroufatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".add_masrouf.AddMasroufActivity"
+            android:exported="false" />
+        <activity
             android:name=".code.CodeActivity"
-            android:exported="true" >
-        </activity>
+            android:exported="true" />
         <activity android:name=".client_safe.MandoubSafeActivity" />
         <activity android:name=".products.ProductsActivityActivity" />
         <activity android:name=".uis.activity_print_bill.PrintSandActivity" />

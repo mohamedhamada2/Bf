@@ -306,6 +306,30 @@
                         android:editable="false"
                         android:textColor="@color/purple_500"/>
                     <TextView
+                        android:id="@+id/txt_discount2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/_10ssp"
+                        android:textSize="@dimen/_14ssp"
+                        android:fontFamily="@font/cairo_bold"
+                        android:textColor="@color/purple_500"
+                        android:text="قيمة الخصم الإضافي"/>
+                    <EditText
+                        android:id="@+id/et_discount2"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_40sdp"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:background="@drawable/txt_login_background"
+                        android:elevation="@dimen/_5sdp"
+                        android:inputType="number"
+                        android:textColorHint="@color/purple_500"
+                        android:fontFamily="@font/cairo_semibold"
+                        android:textSize="@dimen/_13ssp"
+                        android:padding="@dimen/_3sdp"
+                        android:textColor="@color/purple_500"/>
+                    <TextView
                         android:id="@+id/txt_after_discount"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -341,7 +365,7 @@
                     android:textSize="@dimen/_14ssp"
                     android:fontFamily="@font/cairo_bold"
                     android:textColor="@color/purple_500"
-                        android:text="المدفوع"/>
+                    android:text="المدفوع"/>
                     <EditText
                         android:id="@+id/et_paid"
                         android:layout_width="match_parent"
@@ -367,8 +391,7 @@
                         android:textSize="@dimen/_14ssp"
                         android:fontFamily="@font/cairo_bold"
                         android:textColor="@color/purple_500"
-                        android:text="المتبقي"
-                        />
+                        android:text="المتبقي" />
                     <EditText
                         android:id="@+id/et_remain2"
                         android:layout_width="match_parent"

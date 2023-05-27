@@ -180,7 +180,6 @@ public class AddSalaryActivity extends AppCompatActivity {
     private void validation() {
         value = activityAddSalaryBinding.etValue.getText().toString();
         notes = activityAddSalaryBinding.etNotes.getText().toString();
-        type ="1";
         if (!TextUtils.isEmpty(value)&&!TextUtils.isEmpty(client_id)&&!TextUtils.isEmpty(bill_date)){
             addSalaryViewModel.add_salary(type,user_id,bill_date,client_id,value,notes);
         }else {

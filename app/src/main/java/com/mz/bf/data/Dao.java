@@ -15,8 +15,8 @@ public interface Dao {
     @Insert
     void Addbill(FatoraDetail orderItemList);
 
-    @Query("select * from bill")
-    List<FatoraDetail> getallbills();
+    @Query("select * from bill where fatora_type =:id1")
+    List<FatoraDetail> getallbills(String id1);
 
     @Query("DELETE FROM bill")
     void deleteAllproduct();

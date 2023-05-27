@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.mz.bf.add_masrouf.AddMasroufActivity;
 import com.mz.bf.addclient.AddClientActivity;
 import com.mz.bf.addpayment.PaymentActivity;
 import com.mz.bf.addreturns.AddReturnsFragment;
@@ -36,6 +37,7 @@ import com.mz.bf.clients.ClientsActivity;
 import com.mz.bf.code.CodeActivity;
 import com.mz.bf.discountbill.DiscountbillFragment;
 import com.mz.bf.allbills.AllBillsFragment;
+import com.mz.bf.masroufat.MasroufatActivity;
 import com.mz.bf.products.ProductsActivityActivity;
 import com.mz.bf.profile.ProfileActivity;
 import com.mz.bf.returns.ReturnsFragment;
@@ -141,6 +143,12 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 break;
             case R.id.safe:
                 startActivity(new Intent(MainActivity.this, MandoubSafeActivity.class));
+                break;
+            case R.id.add_masrouf:
+                startActivity(new Intent(MainActivity.this, AddMasroufActivity.class));
+                break;
+            case R.id.masroufat:
+                startActivity(new Intent(MainActivity.this, MasroufatActivity.class));
                 break;
             case R.id.logout:
                 mySharedPreference.ClearData(this);

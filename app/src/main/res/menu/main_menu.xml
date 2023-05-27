@@ -20,6 +20,10 @@
         android:title="المخزون" />
     <item android:id="@+id/safe"
         android:title="الخزنة" />
+    <item android:id="@+id/add_masrouf"
+        android:title="إضافة مصروف" />
+    <item android:id="@+id/masroufat"
+        android:title="المصروفات" />
     <item android:id="@+id/logout"
         android:title="تسجيل خروج" />
 

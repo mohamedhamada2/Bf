@@ -3,6 +3,7 @@ package com.mz.bf.api;
 
 
 
+import com.mz.bf.add_masrouf.Masrouf;
 import com.mz.bf.addbill.ClientDiscount;
 import com.mz.bf.addclient.City;
 import com.mz.bf.addclient.Govern;
@@ -21,6 +22,7 @@ import com.mz.bf.addbill.SpinnerModel;
 import com.mz.bf.client_safe.SafeModel;
 import com.mz.bf.clients.ClientLocation;
 import com.mz.bf.code.Code;
+import com.mz.bf.masroufat.AllMasroufat;
 import com.mz.bf.uis.activity_print_bill.EsalModel;
 
 import java.util.List;
@@ -192,5 +194,19 @@ public interface GetDataService{
     @FormUrlEncoded
     @POST("Api/get_url_by_code")
     Call<Code> get_code(@Field("code")String code);
+
+    @GET("Api/masrofat")
+    Call<List<Masrouf>> get_masroufat();
+
+    @FormUrlEncoded
+    @POST("Api/add_masrof")
+    Call<SuccessModel> add_masrouf(@Field("fe2a")String fe2a,
+                                   @Field("date_esal")String date_esal,
+                                   @Field("value")String value,
+                                   @Field("user_id")String user_id);
+
+    @FormUrlEncoded
+    @POST("Api/get_all_masrofat")
+    Call<AllMasroufat> get_all_masrofat(@Field("user_id")String user_id,@Field("page")Integer page);
 }
 

@@ -95,6 +95,9 @@ public class MandoubSafeActivity extends AppCompatActivity {
         activityMandoubSafeBinding.txtSandPrice.setText(df.format(safeModel.getAllsandatQabd())+"");
         activityMandoubSafeBinding.txtEarnest.setText(df.format(Double.parseDouble(safeModel.getAllsandatArbon()))+"");
         all_price = Double.parseDouble(safeModel.getAllsandatArbon())+safeModel.getAllsandatQabd();
-        activityMandoubSafeBinding.txtAllPrice.setText(df.format(all_price)+"");
+        activityMandoubSafeBinding.txtAllPrice.setText(safeModel.getTotal()+"");
+        activityMandoubSafeBinding.txtMasrofat.setText(safeModel.getAll_masrofat());
+        activityMandoubSafeBinding.txtSarfPrice.setText(safeModel.getAllsandat_sarf());
+        activityMandoubSafeBinding.txtAllBills.setText(safeModel.getAll_fatora());
     }
 }

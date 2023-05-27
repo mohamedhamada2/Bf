@@ -36,7 +36,7 @@ public class BillsAdapter extends RecyclerView.Adapter<BillsAdapter.BillsHolder>
         this.fatoraDetailList = fatoraDetailList;
         this.context = context;
         this.billsFragment = billsFragment;
-        databaseClass =  Room.databaseBuilder(this.context.getApplicationContext(),DatabaseClass.class,"bills").allowMainThreadQueries().build();
+        databaseClass =  Room.databaseBuilder(this.context.getApplicationContext(),DatabaseClass.class,"bills1").allowMainThreadQueries().build();
     }
 
     @NonNull

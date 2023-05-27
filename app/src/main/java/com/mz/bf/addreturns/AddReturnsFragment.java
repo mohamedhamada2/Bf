@@ -106,7 +106,7 @@ public class AddReturnsFragment extends Fragment {
         loginModel = mySharedPreference.Get_UserData(getActivity());
         user_id = loginModel.getId();
         car_id = loginModel.getCarNumber();
-        databaseClass =  Room.databaseBuilder(getActivity().getApplicationContext(),DatabaseClass.class,"bills").allowMainThreadQueries().build();
+        databaseClass =  Room.databaseBuilder(getActivity().getApplicationContext(),DatabaseClass.class,"bills1").allowMainThreadQueries().build();
         maintitlelist = new ArrayList<>();
         subtitlelist = new ArrayList<>();
         codeSharedPreferance = CodeSharedPreferance.getInstance();
@@ -277,7 +277,7 @@ public class AddReturnsFragment extends Fragment {
         client_name = fragmentAddReturnsBinding.etClientName.getText().toString();
         bill_num2 = fragmentAddReturnsBinding.etBillNum.getText().toString();
         bill_date = fragmentAddReturnsBinding.etBillDate.getText().toString();
-        fatoraDetailList = databaseClass.getDao().getallbills();
+        fatoraDetailList = databaseClass.getDao().getallbills("2");
         if(!TextUtils.isEmpty(client_name)&&!TextUtils.isEmpty(bill_num2)&&!TextUtils.isEmpty(bill_date)&&!fatoraDetailList.isEmpty()){
             if (fragmentAddReturnsBinding.etAfterDiscount.getText().equals("0")){
                 Toast.makeText(getActivity(), "تم", Toast.LENGTH_SHORT).show();
@@ -810,6 +810,7 @@ public class AddReturnsFragment extends Fragment {
             fatoraDetail.setProduct_pouns(bonous);
             fatoraDetail.setNotes("");
             fatoraDetail.setTotal(total_price+"");
+            fatoraDetail.setFatora_type("2");
             databaseClass.getDao().Addbill(fatoraDetail);
             Toast.makeText(getContext(), "تمت الاضافة بنجاح", Toast.LENGTH_SHORT).show();
             fragmentAddReturnsBinding.etProductName.setText("");
@@ -840,7 +841,7 @@ public class AddReturnsFragment extends Fragment {
     }
 
     public void getAllBills() {
-        fatoraDetailList = databaseClass.getDao().getallbills();
+        fatoraDetailList = databaseClass.getDao().getallbills("2");
         fragmentAddReturnsBinding.txtProductInCart.setText(fatoraDetailList.size()+"");
         billsAdapter = new BillsAdapter(fatoraDetailList,getContext(),this);
         layoutManager = new LinearLayoutManager(getContext());
@@ -1036,6 +1037,7 @@ public class AddReturnsFragment extends Fragment {
                 fatoraDetail.setProduct_pouns("0");
                 fatoraDetail.setNotes("");
                 fatoraDetail.setTotal(et_product_total_price.getText().toString());
+                fatoraDetail.setFatora_type("2");
                 databaseClass.getDao().DeleteProduct(Integer.parseInt(product_id));
                 databaseClass.getDao().Addbill(fatoraDetail);
                 //fragmentBillsBinding.txtProductInCart.setText(fatoraDetailList.size()+"");

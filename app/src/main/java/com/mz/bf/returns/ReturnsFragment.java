@@ -2,6 +2,7 @@ package com.mz.bf.returns;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -25,6 +26,8 @@ import com.mz.bf.api.MySharedPreference;
 import com.mz.bf.api.RetrofitClientInstance;
 import com.mz.bf.authentication.LoginModel;
 import com.mz.bf.databinding.FragmentReturnsBinding;
+import com.mz.bf.uis.activity_print_bill.PrintActivity;
+import com.mz.bf.uis.activity_print_bill.PrintBillActivity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -144,6 +147,24 @@ public class ReturnsFragment extends Fragment {
         //billsAdapter = new BillsAdapter(fatoraDetailList,getContext(),this);
 
         ImageView cancel_img = view2.findViewById(R.id.cancel_img);
+        ImageView print_img = view2.findViewById(R.id.print_img);
+        print_img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), PrintBillActivity.class);
+                intent.putExtra("flag",2);
+                intent.putExtra("rkm",fatora.getRkmFatora());
+                intent.putExtra("client_name",fatora.getClientName());
+                intent.putExtra("id",fatora.getId());
+                intent.putExtra("total_before",fatora.getFatoraCostBeforeDiscount());
+                intent.putExtra("total_after",fatora.getFatoraCostAfterDiscount());
+                intent.putExtra("discount",fatora.getDiscount());
+                intent.putExtra("date",fatora.getDate());
+                intent.putExtra("paid",fatora.getPaid());
+                intent.putExtra("remain",fatora.getRemain());
+                startActivity(intent);
+            }
+        });
         builder.setView(view2);
         dialog3 = builder.create();
         dialog3.show();

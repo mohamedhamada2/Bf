@@ -34,7 +34,7 @@ public class ClientAccountingActivity extends AppCompatActivity {
         back_img = findViewById(R.id.back_img);
         user_id = loginModel.getId() + "";
         webView.setWebViewClient(new ClientAccountingActivity.WebViewClient());
-        webView.loadUrl("https://b.f.e.one-click.solutions/representative/Sale/client_accounting/"+user_id);
+        webView.loadUrl("http://one-click.solutions/alastool_tex/representative/Sale/client_accounting/"+user_id);
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);

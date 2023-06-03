@@ -16,7 +16,7 @@
         android:layout_height="@dimen/_40sdp"
         android:layout_gravity="bottom"
         android:textColor="@color/white"
-        android:text="تأكيد"
+        android:text="تعديل الموقع"
         android:fontFamily="@font/cairo_bold"
         android:textSize="@dimen/_14ssp"
         android:onClick="confirm"

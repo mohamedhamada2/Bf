@@ -19,19 +19,21 @@ public class AllBillsViewModel {
     AllBillsFragment allBillsFragment;
     List<Fatora> fatoraList;
     AllBillsAdapter allBillsAdapter;
+    String base_url;
 
     public AllBillsViewModel(Context context, AllBillsFragment allBillsFragment) {
         this.context = context;
         this.allBillsFragment = allBillsFragment;
+
     }
 
-    public void get_all_bills(int i, String user_id) {
+    public void get_all_bills(int i, String user_id,String from_date,String to_date,String client_id,String fatora_num) {
         if (Utilities.isNetworkAvailable(context)){
             ProgressDialog pd = new ProgressDialog(context);
             pd.setMessage("تحميل ...");
             pd.show();
             GetDataService getDataService = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
-            Call<AllBillsModel> call = getDataService.get_bills(user_id,i);
+            Call<AllBillsModel> call = getDataService.get_bills(user_id,i,from_date,to_date,client_id,fatora_num);
             call.enqueue(new Callback<AllBillsModel>() {
                 @Override
                 public void onResponse(Call<AllBillsModel> call, Response<AllBillsModel> response) {
@@ -51,19 +53,19 @@ public class AllBillsViewModel {
         }
     }
 
-    public void PerformPagination(int page, String user_id) {
+    public void PerformPagination(int page, String user_id,String from_date,String to_date,String client_id,String fatora_num) {
         if (Utilities.isNetworkAvailable(context)){
+            Toast.makeText(context, page+"", Toast.LENGTH_SHORT).show();
             GetDataService getDataService = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
-            Call<AllBillsModel> call = getDataService.get_bills(user_id,page);
+            Call<AllBillsModel> call = getDataService.get_bills(user_id,page,from_date,to_date,client_id,fatora_num);
             call.enqueue(new Callback<AllBillsModel>() {
                 @Override
                 public void onResponse(Call<AllBillsModel> call, Response<AllBillsModel> response) {
                     if (response.isSuccessful()){
                         if (!response.body().getFatora().isEmpty()){
-                            Toast.makeText(context, page+"", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(context, page+"", Toast.LENGTH_SHORT).show();
                             fatoraList = response.body().getFatora();
                             allBillsAdapter.add_bill(fatoraList);
-                            allBillsFragment.init_bill(allBillsAdapter);
                         }
                     }
                 }

@@ -2,13 +2,17 @@
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    >
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="printviewmodel"
+            type="com.mz.bf.uis.activity_print_bill.PrintViewModel" />
+    </data>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        >
+        android:gravity="center_horizontal">
         <androidx.core.widget.NestedScrollView
             android:id="@+id/scrollViewBluetooth"
             android:layout_width="match_parent"
@@ -16,24 +20,379 @@
             android:layout_weight="1"
             android:fillViewport="true"
             android:scrollbars="none"
-            >
+            android:background="#fafafa">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 tools:context=".uis.activity_print_bill.PrintBillActivity"
                 android:orientation="vertical"
-                >
+                android:gravity="right"
+                android:background="@color/white">
+                <ImageView
+                    android:layout_width="@dimen/_120sdp"
+                    android:layout_height="@dimen/_120sdp"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:background="@drawable/logo2"
+                    android:layout_marginRight="@dimen/_100sdp"/>
                 <TextView
+                    android:id="@+id/txt_fatora"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="فاتورة بيع"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="22sp"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/_16sdp"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_18sdp"
-                    android:text="Test Printer"
+                    android:layout_centerVertical="true"
                     android:fontFamily="@font/cairo_bold"
-                    />
+                    android:layout_marginTop="@dimen/_3sdp"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginRight="@dimen/_100sdp">
+                    <TextView
+                        android:id="@+id/order_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:text="رقم الفاتورة"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="18sp"
+                        android:layout_centerVertical="true"/>
+                    <TextView
+                        android:id="@+id/txt_order_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:layout_toLeftOf="@+id/order_num"
+                        android:text="135669"
+                        android:textColor="#828282"
+                        android:textSize="18sp"
+                        android:layout_centerVertical="true"/>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_marginRight="@dimen/_100sdp">
+                    <TextView
+                        android:id="@+id/order_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:text="تاريخ الفاتورة"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="18sp"
+                        android:layout_centerVertical="true"/>
+                    <TextView
+                        android:id="@+id/txt_order_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:layout_toLeftOf="@+id/order_date"
+                        android:text="135669"
+                        android:textColor="#828282"
+                        android:textSize="18sp"
+                        android:layout_centerVertical="true"/>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/_100sdp">
+                    <TextView
+                        android:id="@+id/client_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:textSize="18sp"
+                        android:text="العميل"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentTop="true"/>
+                    <TextView
+                        android:id="@+id/txt_client_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@+id/client_name"
+                        android:textSize="18sp"
+                        android:text="135669"
+                        android:textColor="#828282"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentTop="true"/>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_marginRight="@dimen/_100sdp">
+                    <TextView
+                        android:id="@+id/user_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:text="المندوب"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="18sp"
+                        android:layout_centerVertical="true" />
+                    <TextView
+                        android:id="@+id/txt_user_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@+id/user_name"
+                        android:textSize="18sp"
+                        android:text="135669"
+                        android:textColor="#828282"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentTop="true"/>
+                </RelativeLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/order_details_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true" />
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_marginRight="@dimen/_100sdp">
+                    <TextView
+                        android:id="@+id/total"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:text="الإجمالي قبل الخصم"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="18sp" />
+                    <TextView
+                        android:id="@+id/txt_total"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@+id/total"
+                        android:textSize="18sp"
+                        android:text="135669"
+                        android:textColor="#828282"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentTop="true"/>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/relative2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/_100sdp"
+                    android:layout_marginTop="@dimen/_5sdp">
+                    <TextView
+                        android:id="@+id/discount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:text="قيمة الخصم"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="18sp" />
+                    <TextView
+                        android:id="@+id/txt_discount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@+id/discount"
+                        android:textSize="18sp"
+                        android:text="135669"
+                        android:textColor="#828282"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentTop="true"/>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/relative3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/_100sdp"
+                    android:layout_marginTop="@dimen/_5sdp">
+                    <TextView
+                        android:id="@+id/total_after_discount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:text="الإجمالي بعد الخصم"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="18sp" />
+                    <TextView
+                        android:id="@+id/txt_total_after_discount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@+id/total_after_discount"
+                        android:textSize="18sp"
+                        android:text="135669"
+                        android:textColor="#828282"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentTop="true"/>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/relative4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/_100sdp"
+                    android:layout_marginTop="@dimen/_5sdp">
+                    <TextView
+                        android:id="@+id/paid"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:text="المدفوع"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="18sp" />
+                    <TextView
+                        android:id="@+id/txt_paid"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@+id/paid"
+                        android:textSize="18sp"
+                        android:text="135669"
+                        android:textColor="#828282"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentTop="true"/>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/relative5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/_100sdp"
+                    android:layout_marginTop="@dimen/_5sdp">
+                    <TextView
+                        android:id="@+id/remain"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:text="المتبقي"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="18sp" />
+                    <TextView
+                        android:id="@+id/txt_remain"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@+id/remain"
+                        android:textSize="18sp"
+                        android:text="135669"
+                        android:textColor="#828282"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentTop="true"/>
+                </RelativeLayout>
 
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/_100sdp"
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:layout_marginTop="@dimen/_5sdp">
+                    <TextView
+                        android:id="@+id/previous_rasied"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:text="المديونية السابقة"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="18sp" />
+                    <TextView
+                        android:id="@+id/txt_previous_rasied"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@+id/previous_rasied"
+                        android:textSize="18sp"
+                        android:textColor="#828282"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:layout_alignParentTop="true" />
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/_100sdp"
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:layout_marginTop="@dimen/_5sdp">
+                    <TextView
+                        android:id="@+id/now_rasied"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:text="المديونية الحالية"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="18sp" />
+                    <TextView
+                        android:id="@+id/txt_now_rasied"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@+id/now_rasied"
+                        android:textSize="18sp"
+                        android:textColor="#828282"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentTop="true"/>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/_100sdp"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_marginBottom="@dimen/_10sdp">
+                    <TextView
+                        android:id="@+id/phone2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:text="رقم الشكاوي"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="18sp" />
+                    <TextView
+                        android:id="@+id/txt_phone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@+id/phone2"
+                        android:textSize="18sp"
+                        android:text="01101022239"
+                        android:textColor="#828282"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentTop="true"/>
+                </RelativeLayout>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
         <Button

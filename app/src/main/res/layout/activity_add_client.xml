@@ -159,11 +159,7 @@
                 android:layout_marginRight="@dimen/_20sdp"
                 android:layout_marginLeft="@dimen/_20sdp"
                 android:inputType="text"
-                android:elevation="@dimen/_5sdp"
-                android:editable="false"
-                android:clickable="true"
-                android:onClick="gotoMap"
-                android:focusable="false"/>
+                android:elevation="@dimen/_5sdp"/>
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_45sdp"

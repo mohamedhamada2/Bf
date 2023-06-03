@@ -38,7 +38,7 @@ public class LoginViewModel {
                         if (response.body().getSuccess() ==1){
                             loginModel = response.body();
                             mprefs.Create_Update_UserData(context,loginModel);
-                            Toast.makeText(context, "تم تسجيلك بنجاح", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, loginModel.getCarNumber(), Toast.LENGTH_SHORT).show();
                             context.startActivity(new Intent(context, MainActivity.class));
                             //Animatoo.animateFade(context);
                             loginActivity.finish();

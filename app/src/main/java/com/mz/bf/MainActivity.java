@@ -1,6 +1,7 @@
 package com.mz.bf;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -8,9 +9,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -19,13 +22,18 @@ import com.mz.bf.addclient.AddClientActivity;
 import com.mz.bf.addpayment.PaymentActivity;
 import com.mz.bf.addreturns.AddReturnsFragment;
 import com.mz.bf.addsalary.AddSalaryActivity;
+import com.mz.bf.addvisit.AddVisitActivity;
+import com.mz.bf.addvisit.VisitActivity;
 import com.mz.bf.api.MySharedPreference;
 import com.mz.bf.authentication.LoginActivity;
 import com.mz.bf.authentication.LoginModel;
 import com.mz.bf.addbill.BillsFragment;
+import com.mz.bf.client_safe.MandoubSafeActivity;
 import com.mz.bf.clientaccounting.ClientAccountingActivity;
+import com.mz.bf.clients.ClientsActivity;
 import com.mz.bf.discountbill.DiscountbillFragment;
 import com.mz.bf.allbills.AllBillsFragment;
+import com.mz.bf.products.ProductsActivityActivity;
 import com.mz.bf.profile.ProfileActivity;
 import com.mz.bf.returns.ReturnsFragment;
 import com.mz.bf.withoutdiscountbill.WithoutDiscountFragment;
@@ -41,10 +49,12 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     Fragment withoutDiscountFragment = new AddReturnsFragment();
     Fragment active;
     FragmentManager fm = getSupportFragmentManager();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.e("success","success");
         homeNavigationView = findViewById(R.id.homeBottomnavigation);
         mySharedPreference = MySharedPreference.getInstance();
         loginModel = mySharedPreference.Get_UserData(this);
@@ -89,7 +99,8 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     };
 
     public void showpopup(View view) {
-        android.widget.PopupMenu menu = new android.widget.PopupMenu(this, view);
+        Context myContext = new ContextThemeWrapper(MainActivity.this,R.style.menuStyle);
+        android.widget.PopupMenu menu = new android.widget.PopupMenu(myContext, view);
         menu.setOnMenuItemClickListener(this::onMenuItemClick);
         menu.inflate(R.menu.main_menu);
         menu.show();
@@ -100,6 +111,9 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         switch (menuItem.getItemId()) {
             case R.id.add_client:
                 startActivity(new Intent(MainActivity.this, AddClientActivity.class));
+                break;
+            case R.id.clients:
+                startActivity(new Intent(MainActivity.this, ClientsActivity.class));
                 break;
             case R.id.clientaccounting:
                 startActivity(new Intent(MainActivity.this, ClientAccountingActivity.class));
@@ -112,6 +126,18 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 break;
             case R.id.add_payment:
                 startActivity(new Intent(MainActivity.this, PaymentActivity.class));
+                break;
+            case R.id.add_visit:
+                startActivity(new Intent(MainActivity.this, AddVisitActivity.class));
+                break;
+            case R.id.get_visits:
+                startActivity(new Intent(MainActivity.this, VisitActivity.class));
+                break;
+            case R.id.products:
+                startActivity(new Intent(MainActivity.this, ProductsActivityActivity.class));
+                break;
+            case R.id.safe:
+                startActivity(new Intent(MainActivity.this, MandoubSafeActivity.class));
                 break;
             case R.id.logout:
                 mySharedPreference.ClearData(this);

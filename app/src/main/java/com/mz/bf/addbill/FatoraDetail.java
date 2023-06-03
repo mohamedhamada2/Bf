@@ -36,6 +36,19 @@ public class FatoraDetail {
     private String notes;
 
     @NonNull
+    public String getFatora_type() {
+        return fatora_type;
+    }
+
+    public void setFatora_type(@NonNull String fatora_type) {
+        this.fatora_type = fatora_type;
+    }
+
+    @NonNull
+    @ColumnInfo(name = "fatora_type")
+    private String fatora_type;
+
+    @NonNull
     public String getProduct_id_fk() {
         return product_id_fk;
     }

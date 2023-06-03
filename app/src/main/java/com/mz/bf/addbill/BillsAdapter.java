@@ -54,13 +54,13 @@ public class BillsAdapter extends RecyclerView.Adapter<BillsAdapter.BillsHolder>
         holder.btn_delete_bill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                billsFragment.delete_product(fatoraDetailList.get(position));
+                billsFragment.delete_product(fatoraDetailList.get(holder.getAdapterPosition()));
             }
         });
         holder.btn_edit_bill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                billsFragment.edit_bill(fatoraDetailList.get(position));
+                billsFragment.edit_bill(fatoraDetailList.get(holder.getAdapterPosition()));
             }
         });
        /* holder.et_product_discount.addTextChangedListener(new TextWatcher() {

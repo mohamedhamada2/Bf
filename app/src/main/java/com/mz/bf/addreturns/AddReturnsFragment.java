@@ -1,9 +1,11 @@
 package com.mz.bf.addreturns;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -27,6 +29,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mz.bf.MainActivity;
+import com.mz.bf.MainActivity2;
 import com.mz.bf.R;
 import com.mz.bf.Utilities.Utilities;
 import com.mz.bf.addbill.BillsFragment;
@@ -43,10 +47,12 @@ import com.mz.bf.authentication.LoginModel;
 import com.mz.bf.data.DatabaseClass;
 import com.mz.bf.databinding.FragmentAddReturnsBinding;
 import com.mz.bf.returns.ReturnsFragment;
+import com.mz.bf.uis.activity_print_bill.PrintBillActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -54,6 +60,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
@@ -67,7 +74,7 @@ public class AddReturnsFragment extends Fragment {
     AddReturnsViewModel addReturnsViewModel;
     Calendar myCalendar;
     DatePickerDialog.OnDateSetListener date_picker_dialog;
-    String main_branch_id,sub_branch_id,ware_houses_id,type_id,product_name,product_id,product_price,product_amount,discount,bonous,pay_id,client_id,bill_date,client_name,bill_num2,user_id,value="0";
+    String main_branch_id,sub_branch_id,ware_houses_id,type_id,product_name,product_id,product_price,product_amount,discount,bonous,pay_id,client_id,bill_date,client_name,bill_num2,user_id,value="0.0",car_id;
     List<SpinnerModel> main_branches_list,sub_branches_list,ware_houses_list;
     List<String> maintitlelist,subtitlelist,warehousestitlelist,typelist,paidlist;
     List<Product> productList;
@@ -77,13 +84,15 @@ public class AddReturnsFragment extends Fragment {
     List<FatoraDetail> fatoraDetailList;
     BillsAdapter billsAdapter;
     RecyclerView.LayoutManager layoutManager;
-    Double totalPrice,paid,remain,price_after_discount;
+    Double totalPrice=0.0,paid,remain,price_after_discount;
     MySharedPreference mySharedPreference;
     LoginModel loginModel;
     View view2;
     ClientAdapter clientAdapter;
     LinearLayoutManager layoutManager3,layoutManager2;
     ProductAdapter productAdapter;
+    protected FragmentActivity mActivity;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -95,18 +104,25 @@ public class AddReturnsFragment extends Fragment {
         mySharedPreference = MySharedPreference.getInstance();
         loginModel = mySharedPreference.Get_UserData(getActivity());
         user_id = loginModel.getId();
-        databaseClass =  Room.databaseBuilder(getActivity().getApplicationContext(),DatabaseClass.class,"bills").allowMainThreadQueries().build();
-
+        car_id = loginModel.getCarNumber();
+        databaseClass =  Room.databaseBuilder(getActivity().getApplicationContext(),DatabaseClass.class,"bills1").allowMainThreadQueries().build();
         maintitlelist = new ArrayList<>();
         subtitlelist = new ArrayList<>();
         warehousestitlelist = new ArrayList<>();
         typelist = new ArrayList<>();
         paidlist = new ArrayList<>();
-        addReturnsViewModel.get_main_branches();
+        main_branch_id = "13";
+        sub_branch_id = "16";
+        ware_houses_id = "9";
+        //addReturnsViewModel.get_main_branches();
         addReturnsViewModel.getTypes();
         addReturnsViewModel.getPayed();
         addReturnsViewModel.getBillnum();
         myCalendar = Calendar.getInstance();
+        String myFormat = "dd-MM-yyyy";//In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.ENGLISH);
+        bill_date = sdf.format(new Date());
+        fragmentAddReturnsBinding.etBillDate.setText(bill_date);
         //updateview(language);
         date_picker_dialog = new DatePickerDialog.OnDateSetListener() {
 
@@ -136,7 +152,13 @@ public class AddReturnsFragment extends Fragment {
                 openclientpopup(user_id);
             }
         });
-        fragmentAddReturnsBinding.mainSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        fragmentAddReturnsBinding.etProductName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openpopup(ware_houses_id);
+            }
+        });
+        /*fragmentAddReturnsBinding.mainSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 main_branch_id = main_branches_list.get(i).getId();
@@ -195,14 +217,14 @@ public class AddReturnsFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> adapterView) {
 
             }
-        });
+        });*/
         fragmentAddReturnsBinding.typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 try {
-                    if (typelist.get(0).equals("قطاعي")){
+                    if (typelist.get(1).equals("قطاعي")){
                         type_id = "1";
-                    }else if (typelist.get(1).equals("جملة")){
+                    }else if (typelist.get(0).equals("جملة")){
                         type_id ="2";
                     }
                     //citytitlelist.clear();
@@ -259,9 +281,48 @@ public class AddReturnsFragment extends Fragment {
                     remain = totalPrice;
                     fragmentAddReturnsBinding.etRemain2.setText(remain+"");
                 }else {
-                    paid = Double.parseDouble(charSequence.toString());
-                    remain = totalPrice-paid;
-                    fragmentAddReturnsBinding.etRemain2.setText(remain+"");
+                    try {
+                        paid = Double.parseDouble(charSequence.toString());
+                        if (price_after_discount.equals(total_price)){
+                            remain = totalPrice-paid;
+                            fragmentAddReturnsBinding.etRemain2.setText(remain+"");
+                        }else {
+                            remain = price_after_discount-paid;
+                            fragmentAddReturnsBinding.etRemain2.setText(remain+"");
+                        }
+                    }catch (Exception e){
+                        fragmentAddReturnsBinding.etPaid.setText("0");
+
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        fragmentAddReturnsBinding.etDiscount.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                try {
+                    value = fragmentAddReturnsBinding.etDiscount.getText().toString();
+                    price_after_discount = totalPrice-Double.parseDouble(value);
+                    fragmentAddReturnsBinding.etAllTotalPrice.setText(totalPrice+"");
+                    fragmentAddReturnsBinding.etAfterDiscount.setText(price_after_discount+"");
+                    fragmentAddReturnsBinding.etRemain2.setText(totalPrice+"");
+                    fragmentAddReturnsBinding.etPaid.setText("0");
+                }catch (Exception e){
+                    value = "0.0";
+                    price_after_discount = totalPrice-Double.parseDouble("0.0");
+                    fragmentAddReturnsBinding.etAllTotalPrice.setText(totalPrice+"");
+                    fragmentAddReturnsBinding.etAfterDiscount.setText(price_after_discount+"");
+                    fragmentAddReturnsBinding.etRemain2.setText(totalPrice+"");
                 }
             }
 
@@ -296,6 +357,8 @@ public class AddReturnsFragment extends Fragment {
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view2 = inflater.inflate(R.layout.products_dialog, null);
         RecyclerView products_recycler = view2.findViewById(R.id.product_recycler);
+        EditText et_search = view2.findViewById(R.id.et_search);
+        et_search.setVisibility(View.GONE);
         TextView txt_no_data = view2.findViewById(R.id.txt_no_data);
         if (fatoraDetailList.isEmpty()){
             txt_no_data.setVisibility(View.VISIBLE);
@@ -333,14 +396,14 @@ public class AddReturnsFragment extends Fragment {
         client_name = fragmentAddReturnsBinding.etClientName.getText().toString();
         bill_num2 = fragmentAddReturnsBinding.etBillNum.getText().toString();
         bill_date = fragmentAddReturnsBinding.etBillDate.getText().toString();
-        fatoraDetailList = databaseClass.getDao().getallbills();
+        fatoraDetailList = databaseClass.getDao().getallbills("2");
         if(!TextUtils.isEmpty(client_name)&&!TextUtils.isEmpty(bill_num2)&&!TextUtils.isEmpty(bill_date)&&!fatoraDetailList.isEmpty()){
             if (fragmentAddReturnsBinding.etAfterDiscount.getText().equals("0")){
-                Toast.makeText(getActivity(), "تم", Toast.LENGTH_SHORT).show();
-                addReturnsViewModel.add_bill(user_id,fragmentAddReturnsBinding.etBillNum.getText().toString(),bill_date,pay_id,"",client_id,main_branch_id,sub_branch_id,ware_houses_id,totalPrice,"0",paid+"",remain+"","byan",fatoraDetailList);
+                //Toast.makeText(getActivity(), "تم", Toast.LENGTH_SHORT).show();
+                addReturnsViewModel.add_bill(user_id,fragmentAddReturnsBinding.etBillNum.getText().toString(),bill_date,pay_id,"",client_id,main_branch_id,sub_branch_id,ware_houses_id,fragmentAddReturnsBinding.etAllTotalPrice.getText().toString(),price_after_discount,"0",paid+"",remain+"","byan",fatoraDetailList);
             }else {
-                Toast.makeText(getActivity(), "تم", Toast.LENGTH_SHORT).show();
-                addReturnsViewModel.add_bill(user_id,fragmentAddReturnsBinding.etBillNum.getText().toString(),bill_date,pay_id,"",client_id,main_branch_id,sub_branch_id,ware_houses_id,price_after_discount,"0",paid+"",remain+"","byan",fatoraDetailList);
+                //Toast.makeText(getActivity(), "تم", Toast.LENGTH_SHORT).show();
+                addReturnsViewModel.add_bill(user_id,fragmentAddReturnsBinding.etBillNum.getText().toString(),bill_date,pay_id,"",client_id,main_branch_id,sub_branch_id,ware_houses_id,fragmentAddReturnsBinding.etAllTotalPrice.getText().toString(),price_after_discount,fragmentAddReturnsBinding.etDiscount.getText().toString(),paid+"",remain+"","byan",fatoraDetailList);
             }
         }else {
             if (TextUtils.isEmpty(bill_num2)){
@@ -552,14 +615,15 @@ public class AddReturnsFragment extends Fragment {
             pd.setMessage("تحميل ...");
             pd.show();
             GetDataService getDataService = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
-            Call<ProductModel> call = getDataService.get_all_products(1,ware_houses_id);
+            Call<ProductModel> call = getDataService.get_all_products(1,user_id,car_id);
             call.enqueue(new Callback<ProductModel>() {
                 @Override
                 public void onResponse(Call<ProductModel> call, Response<ProductModel> response) {
                     if (response.isSuccessful()) {
                         pd.dismiss();
-                        productAdapter = new ProductAdapter(response.body().getProducts(),getContext(),AddReturnsFragment.this);
-                        layoutManager2 = new LinearLayoutManager(getContext());
+                        Toast.makeText(getActivity(), "hello", Toast.LENGTH_SHORT).show();
+                        productAdapter = new ProductAdapter(response.body().getProducts(),getActivity(),AddReturnsFragment.this);
+                        layoutManager2 = new LinearLayoutManager(getActivity());
                         product_recycler.setLayoutManager(layoutManager2);
                         product_recycler.setAdapter(productAdapter);
                         product_recycler.setHasFixedSize(true);
@@ -582,7 +646,7 @@ public class AddReturnsFragment extends Fragment {
                 if (!charSequence.toString().equals("")){
                     if (Utilities.isNetworkAvailable(getActivity())){
                         GetDataService getDataService = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
-                        Call<ProductModel> call = getDataService.search_product(1,ware_houses_id,charSequence.toString());
+                        Call<ProductModel> call = getDataService.search_product(1,car_id,charSequence.toString(),user_id);
                         call.enqueue(new Callback<ProductModel>() {
                             @Override
                             public void onResponse(Call<ProductModel> call, Response<ProductModel> response) {
@@ -603,7 +667,7 @@ public class AddReturnsFragment extends Fragment {
                 }else {
                     if (Utilities.isNetworkAvailable(getActivity())){
                         GetDataService getDataService = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
-                        Call<ProductModel> call = getDataService.get_all_products(1,ware_houses_id);
+                        Call<ProductModel> call = getDataService.get_all_products(1,user_id,car_id);
                         call.enqueue(new Callback<ProductModel>() {
                             @Override
                             public void onResponse(Call<ProductModel> call, Response<ProductModel> response) {
@@ -674,7 +738,7 @@ public class AddReturnsFragment extends Fragment {
     private void PerformProductPagination(Integer page, String ware_houses_id) {
         if (Utilities.isNetworkAvailable(getActivity())){
             GetDataService getDataService = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
-            Call<ProductModel> call = getDataService.get_all_products(page,ware_houses_id);
+            Call<ProductModel> call = getDataService.get_all_products(page,user_id,car_id);
             call.enqueue(new Callback<ProductModel>() {
                 @Override
                 public void onResponse(Call<ProductModel> call, Response<ProductModel> response) {
@@ -724,9 +788,55 @@ public class AddReturnsFragment extends Fragment {
     public void setData(Product product) {
         product_id = product.getId();
         product_name = product.getProductName();
-        product_price = product.getOneSellPrice();
-        product_amount = fragmentAddReturnsBinding.etProductAmout.getText().toString();
+        product_price="";
+        fragmentAddReturnsBinding.typeSpinner.setSelection(0);
+        type_id = "1";
+        product_amount ="1";
+        product_price = product.getPacketSellPrice();
         price = Double.parseDouble(product_price);
+        total_price = price*Double.parseDouble(product_amount);
+        fragmentAddReturnsBinding.etProductPrice.setText(product_price);
+        fragmentAddReturnsBinding.etTotalPrice.setText(total_price+"");
+        fragmentAddReturnsBinding.etProductAmout.setText(product_amount);
+        fragmentAddReturnsBinding.typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                try {
+                    if (product != null){
+                        if (fragmentAddReturnsBinding.typeSpinner.getSelectedItemPosition()==0){
+                            type_id = "1";
+                            product_price = product.getPacketSellPrice();
+                            product_amount = fragmentAddReturnsBinding.etProductAmout.getText().toString();
+                            price = Double.parseDouble(product_price);
+                            total_price = price*Double.parseDouble(product_amount);
+                            fragmentAddReturnsBinding.etProductPrice.setText(product_price);
+                            fragmentAddReturnsBinding.etTotalPrice.setText(total_price+"");
+                        }else if (fragmentAddReturnsBinding.typeSpinner.getSelectedItemPosition()==1){
+                            type_id ="2";
+                            product_price = product.getOneSellPrice();
+                            product_amount = fragmentAddReturnsBinding.etProductAmout.getText().toString();
+                            price = Double.parseDouble(product_price);
+                            total_price = price * Double.parseDouble(product_amount+"");
+                            fragmentAddReturnsBinding.etProductPrice.setText(product_price);
+                            fragmentAddReturnsBinding.etTotalPrice.setText(total_price+"");
+
+                        }
+                    }
+                    //citytitlelist.clear();
+                }catch (Exception e){
+                    TextView textView = (TextView) view;
+                    textView.setVisibility(View.INVISIBLE);
+                    //citytitlelist.clear();
+                    //Toast.makeText(AddStoreActivity.this, "لا يوحد مدينة", Toast.LENGTH_SHORT).show();
+
+                }
+
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
         discount = "0";
         bonous = "0";
         if (TextUtils.isEmpty(product_amount)){
@@ -740,7 +850,7 @@ public class AddReturnsFragment extends Fragment {
         }
         fragmentAddReturnsBinding.etProductName.setText(product.getProductName());
         fragmentAddReturnsBinding.etProductPrice.setVisibility(View.VISIBLE);
-        fragmentAddReturnsBinding.etProductPrice.setText(product.getOneSellPrice());
+        //fragmentAddReturnsBinding.etProductPrice.setText(product.getOneSellPrice());
         //fragmentBillsBinding.etDiscount.setText(discount);
         //fragmentBillsBinding.etProductAmout.setText(product_amount);
         fragmentAddReturnsBinding.etProductAmout.addTextChangedListener(new TextWatcher() {
@@ -778,7 +888,7 @@ public class AddReturnsFragment extends Fragment {
         fragmentAddReturnsBinding.btnAddBill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!TextUtils.isEmpty(product_name)&&!TextUtils.isEmpty(product_amount)&&!TextUtils.isEmpty(product_price)){
+                if (!TextUtils.isEmpty(product_name)&&!TextUtils.isEmpty(product_amount)&&!TextUtils.isEmpty(product_price)) {
                     add_product();
                 }else {
                     Toast.makeText(getContext(), "أكمل باقي البيانات", Toast.LENGTH_SHORT).show();
@@ -796,9 +906,10 @@ public class AddReturnsFragment extends Fragment {
             fatoraDetail.setType(type_id);
             fatoraDetail.setAmount(product_amount);
             fatoraDetail.setSell_price(product_price);
-            fatoraDetail.setProduct_discount(discount);
-            fatoraDetail.setProduct_pouns(bonous);
+            fatoraDetail.setProduct_discount("0");
+            fatoraDetail.setProduct_pouns("0");
             fatoraDetail.setNotes("");
+            fatoraDetail.setFatora_type("2");
             fatoraDetail.setTotal(total_price+"");
             databaseClass.getDao().Addbill(fatoraDetail);
             Toast.makeText(getContext(), "تمت الاضافة بنجاح", Toast.LENGTH_SHORT).show();
@@ -814,10 +925,11 @@ public class AddReturnsFragment extends Fragment {
             fatoraDetail.setType(type_id);
             fatoraDetail.setAmount(product_amount);
             fatoraDetail.setSell_price(product_price);
-            fatoraDetail.setProduct_discount(discount);
-            fatoraDetail.setProduct_pouns(bonous);
+            fatoraDetail.setProduct_discount("0");
+            fatoraDetail.setProduct_pouns("0");
             fatoraDetail.setNotes("");
             fatoraDetail.setTotal(total_price+"");
+            fatoraDetail.setFatora_type("2");
             databaseClass.getDao().editproduct(fatoraDetail);
             //fragmentBillsBinding.txtProductInCart.setText(fatoraDetailList.size()+"");
             Toast.makeText(getContext(), "تم التعديل بنجاح", Toast.LENGTH_SHORT).show();
@@ -830,7 +942,7 @@ public class AddReturnsFragment extends Fragment {
     }
 
     public void getAllBills() {
-        fatoraDetailList = databaseClass.getDao().getallbills();
+        fatoraDetailList = databaseClass.getDao().getallbills("2");
         fragmentAddReturnsBinding.txtProductInCart.setText(fatoraDetailList.size()+"");
         billsAdapter = new BillsAdapter(fatoraDetailList,getContext(),this);
         layoutManager = new LinearLayoutManager(getContext());
@@ -903,17 +1015,19 @@ public class AddReturnsFragment extends Fragment {
 
     public void setClientData(Client client) {
         client_id = client.getClientIdFk();
-        addReturnsViewModel.get_client_discount(client_id);
+        //addReturnsViewModel.get_client_discount(client_id);
         fragmentAddReturnsBinding.etClientName.setText(client.getClientName());
         dialog2.dismiss();
     }
 
-    public void DeleteProducts() {
+    public void DeleteProducts(String fatora_id) {
         databaseClass.getDao().deleteAllproduct();
         getAllBills();
         Toast.makeText(getActivity(), "تم إضافة المرتجع بنجاح", Toast.LENGTH_SHORT).show();
-        getActivity().finish();
-        startActivity(getActivity().getIntent());
+        Intent intent = new Intent(getActivity(), PrintBillActivity.class);
+        intent.putExtra("flag",2);
+        intent.putExtra("id",fatora_id);
+        startActivity(intent);
     }
 
     public void delete_product(FatoraDetail fatoraDetail) {
@@ -939,15 +1053,19 @@ public class AddReturnsFragment extends Fragment {
         EditText et_product_price = view.findViewById(R.id.et_product_price);
         EditText et_product_total_price = view.findViewById(R.id.et_total_price);
         EditText et_product_discount = view.findViewById(R.id.et_discount);
-        EditText et_bonous = view.findViewById(R.id.et_bonous);
         Button btn_add_bill= view.findViewById(R.id.btn_add_bill);
-        Spinner type_spinner = view.findViewById(R.id.type_spinner);
+        EditText type_spinner = view.findViewById(R.id.type_spinner);
+        try {
+            dialog3.dismiss();
+        }catch (Exception e){
+
+        }
         product_id = fatoraDetail.getProduct_id_fk();
-        List<String> typeslist = new ArrayList<>();
-        typeslist.add("قطاعي");
-        typeslist.add("جملة");
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_item2,typeslist);
-        type_spinner.setAdapter(arrayAdapter);
+        if (fatoraDetail.getType().equals("1")){
+            type_spinner.setText("جملة");
+        }else if (fatoraDetail.getType().equals("2")){
+            type_spinner.setText("قطاعي");
+        }
         total_price = Double.parseDouble(fatoraDetail.getTotal());
         product_price = fatoraDetail.getSell_price();
         product_amount = fatoraDetail.getAmount();
@@ -957,11 +1075,9 @@ public class AddReturnsFragment extends Fragment {
         //Toast.makeText(getActivity(), product_name, Toast.LENGTH_SHORT).show();
         et_product_name.setText(product_name);
         et_product_price.setText(product_price);
-        et_product_discount.setText(discount);
         et_product_amount.setText(product_amount);
         et_product_total_price.setText(total_price+"");
         //Toast.makeText(getActivity(),total_price+"",Toast.LENGTH_SHORT).show();
-        et_bonous.setText(fatoraDetail.getProduct_pouns());
         et_product_amount.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -987,43 +1103,7 @@ public class AddReturnsFragment extends Fragment {
 
             }
         });
-        et_product_discount.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (charSequence.toString().equals("")){
-                    discount ="0.0";
-                    nesba_discount = 0.0;
-                    try {
-                        total_price = price*Double.parseDouble(product_amount);
-                        et_product_total_price.setText(total_price+"");
-                    }catch (Exception e){
-                        total_price = 0.0;
-                        et_product_total_price.setText(total_price+"");
-                    }
-                }else {
-                    discount = charSequence.toString();
-                    nesba_discount = Double.parseDouble(discount);
-                    try {
-                        total_price = price*Double.parseDouble(product_amount)-price*Double.parseDouble(product_amount)*nesba_discount/100;
-                        et_product_total_price.setText(total_price+"");
-                    }catch (Exception e){
-                        total_price = 0.0;
-                        et_product_total_price.setText(total_price+"");
-                    }
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
-        et_bonous.setText(bonous);
         /*if (TextUtils.isEmpty(product_amount)){
             total_price = 0.0;
             et_product_total_price.setText(total_price+"");
@@ -1059,8 +1139,9 @@ public class AddReturnsFragment extends Fragment {
                 fatoraDetail.setType(type_id);
                 fatoraDetail.setAmount(et_product_amount.getText().toString());
                 fatoraDetail.setSell_price(et_product_price.getText().toString());
-                fatoraDetail.setProduct_discount(et_product_discount.getText().toString());
+                fatoraDetail.setProduct_discount("0");
                 fatoraDetail.setProduct_pouns("0");
+                fatoraDetail.setFatora_type("2");
                 fatoraDetail.setNotes("");
                 fatoraDetail.setTotal(et_product_total_price.getText().toString());
                 databaseClass.getDao().DeleteProduct(Integer.parseInt(product_id));
@@ -1102,6 +1183,14 @@ public class AddReturnsFragment extends Fragment {
             }
         }else {
             Toast.makeText(getActivity(), "لا يوجد فواتير لعرض نسبة الخصم", Toast.LENGTH_SHORT).show();
+        }
+    }
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof Activity){
+            mActivity = (FragmentActivity) context;
         }
     }
 }

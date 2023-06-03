@@ -2,7 +2,9 @@ package com.mz.bf.addreturns;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
+import android.view.View;
 
 import com.mz.bf.Utilities.Utilities;
 import com.mz.bf.addbill.Bill;
@@ -13,6 +15,8 @@ import com.mz.bf.addbill.SpinnerModel;
 import com.mz.bf.addclient.SuccessModel;
 import com.mz.bf.api.GetDataService;
 import com.mz.bf.api.RetrofitClientInstance;
+import com.mz.bf.uis.activity_print_bill.PrintActivity;
+import com.mz.bf.uis.activity_print_bill.PrintBillActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -113,8 +117,8 @@ public class AddReturnsViewModel {
 
     public void getTypes() {
         typelist = new ArrayList<>();
-        typelist.add("قطاعي");
         typelist.add("جملة");
+        typelist.add("قطاعي");
         addReturnsFragment.setypespinner(typelist);
     }
 
@@ -145,7 +149,7 @@ public class AddReturnsViewModel {
         }
     }
 
-    public void add_bill(String user_id, String bill_num, String bill_date, String pay_id, String s2, String client_id, String main_branch_id, String sub_branch_id, String ware_houses_id, Double totalPrice, String discount, String paid, String remain, String byan, List<FatoraDetail> fatoraDetailList) {
+    public void add_bill(String user_id, String bill_num, String bill_date, String pay_id, String s2, String client_id, String main_branch_id, String sub_branch_id, String ware_houses_id,String price_before_discount ,Double totalPrice, String discount, String paid, String remain, String byan, List<FatoraDetail> fatoraDetailList) {
         Bill bill = new Bill();
         bill.setUserId(user_id);
         bill.setFatoraDate(bill_date);
@@ -155,8 +159,8 @@ public class AddReturnsViewModel {
         bill.setMainBranchIdFk(main_branch_id);
         bill.setSubBranchIdFk(sub_branch_id);
         bill.setStorageIdFk(ware_houses_id);
-        bill.setFatoraCostBeforeDiscount(totalPrice+"");
-        bill.setDiscount("0");
+        bill.setFatoraCostBeforeDiscount(price_before_discount);
+        bill.setDiscount(discount);
         bill.setFatoraCostAfterDiscount(totalPrice+"");
         bill.setPaid(paid);
         bill.setRemain(remain);
@@ -174,7 +178,7 @@ public class AddReturnsViewModel {
                     if (response.isSuccessful()){
                         if (response.body().getSuccess()==1){
                             pd.dismiss();
-                            addReturnsFragment.DeleteProducts();
+                            addReturnsFragment.DeleteProducts(response.body().getFatora_id());
                         }
                     }
                 }

@@ -34,7 +34,7 @@ public class WithoutDiscountFragment extends Fragment {
         progressBar = view.findViewById(R.id.progressBar);
         user_id = loginModel.getId()+"";
         webView.setWebViewClient(new WithoutDiscountFragment.WebViewClient());
-        webView.loadUrl("https://abbgroup.org.uk/project/roxcelegypt/representative/Sale/sdad_pill/2/"+user_id);
+        webView.loadUrl("http://one-click.solutions/alastool_tex/representative/Sale/sdad_pill/2/"+user_id);
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);

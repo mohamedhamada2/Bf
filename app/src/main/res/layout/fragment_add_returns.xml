@@ -115,6 +115,7 @@
                     android:layout_marginTop="@dimen/_5sdp"
                     android:layout_marginRight="@dimen/_10sdp"
                     android:layout_marginLeft="@dimen/_10sdp"
+                    android:layout_marginBottom="@dimen/_5sdp"
                     android:background="@drawable/txt_login_background"
                     android:elevation="@dimen/_5sdp"
                     android:clickable="true"
@@ -135,6 +136,7 @@
                     android:fontFamily="@font/cairo_bold"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:layout_gravity="right"
+                    android:visibility="gone"
                     android:layout_marginRight="@dimen/_10sdp"/>
                 <Spinner
                     android:id="@+id/main_spinner"
@@ -146,6 +148,7 @@
                     android:layout_marginTop="@dimen/_5sdp"
                     android:textAlignment="textStart"
                     android:elevation="@dimen/_5sdp"
+                    android:visibility="gone"
                     android:layout_marginBottom="@dimen/_5sdp"/>
                 <TextView
                     android:layout_width="wrap_content"
@@ -156,6 +159,7 @@
                     android:fontFamily="@font/cairo_bold"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:layout_gravity="right"
+                    android:visibility="gone"
                     android:layout_marginRight="@dimen/_10sdp"/>
                 <Spinner
                     android:id="@+id/sub_spinner"
@@ -166,6 +170,7 @@
                     android:layout_marginLeft="@dimen/_10sdp"
                     android:textAlignment="textStart"
                     android:elevation="@dimen/_5sdp"
+                    android:visibility="gone"
                     android:layout_marginBottom="@dimen/_5sdp"/>
                 <TextView
                     android:layout_width="wrap_content"
@@ -176,6 +181,7 @@
                     android:fontFamily="@font/cairo_bold"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:layout_gravity="right"
+                    android:visibility="gone"
                     android:layout_marginRight="@dimen/_10sdp"/>
                 <Spinner
                     android:id="@+id/warehouse_spinner"
@@ -184,7 +190,7 @@
                     android:background="@drawable/spinner_item_bg"
                     android:layout_marginRight="@dimen/_10sdp"
                     android:layout_marginLeft="@dimen/_10sdp"
-
+                    android:visibility="gone"
                     android:textAlignment="textStart"
                     android:elevation="@dimen/_5sdp"
                     android:layout_marginBottom="@dimen/_5sdp"/>
@@ -347,7 +353,7 @@
                     android:textSize="@dimen/_14ssp"
                     android:fontFamily="@font/cairo_bold"
                     android:textColor="@color/purple_500"
-                    android:text="نسبة خصم العميل"/>
+                    android:text="قيمة خصم العميل"/>
                 <EditText
                     android:id="@+id/et_discount"
                     android:layout_width="match_parent"
@@ -363,11 +369,11 @@
                     android:fontFamily="@font/cairo_semibold"
                     android:textSize="@dimen/_13ssp"
                     android:padding="@dimen/_3sdp"
+                    android:textColor="@color/purple_500"
                     android:clickable="false"
                     android:focusable="false"
                     android:enabled="false"
-                    android:editable="false"
-                    android:textColor="@color/purple_500"/>
+                    android:editable="false"/>
                 <TextView
                     android:id="@+id/txt_after_discount"
                     android:layout_width="match_parent"

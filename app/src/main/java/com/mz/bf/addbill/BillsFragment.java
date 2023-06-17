@@ -1,12 +1,17 @@
 package com.mz.bf.addbill;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -28,8 +33,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.mz.bf.MainActivity;
 import com.mz.bf.R;
 import com.mz.bf.Utilities.Utilities;
+import com.mz.bf.addvisit.AddVisitActivity;
+import com.mz.bf.addvisit.LocationTrack;
 import com.mz.bf.api.GetDataService;
 import com.mz.bf.api.MySharedPreference;
 import com.mz.bf.api.RetrofitClientInstance;
@@ -47,17 +55,22 @@ import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
+import io.nlopez.smartlocation.OnLocationUpdatedListener;
+import io.nlopez.smartlocation.SmartLocation;
+import io.nlopez.smartlocation.location.config.LocationAccuracy;
+import io.nlopez.smartlocation.location.config.LocationParams;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class BillsFragment extends Fragment {
+public class BillsFragment extends Fragment implements OnLocationUpdatedListener {
     FragmentBillsBinding fragmentBillsBinding;
     AddBillsViewModel addBillsViewModel;
     Calendar myCalendar;
@@ -67,12 +80,13 @@ public class BillsFragment extends Fragment {
     List<String> maintitlelist,subtitlelist,warehousestitlelist,typelist,paidlist;
     List<Product> productList;
     Dialog dialog2,dialog3;
+    int PERMISSION_ID = 44;
     DatabaseClass databaseClass;
     Double price,total_price,price_after_discount;
     List<FatoraDetail> fatoraDetailList;
     BillsAdapter billsAdapter;
     RecyclerView.LayoutManager layoutManager;
-    Double totalPrice,paid,remain;
+    Double totalPrice,paid,remain,tvLatitude,tvLongitude;
     MySharedPreference mySharedPreference;
     LoginModel loginModel;
     View view2;
@@ -81,6 +95,7 @@ public class BillsFragment extends Fragment {
     ProductAdapter productAdapter;
     String value = "0";
     Double amount_available;
+    LocationTrack locationTrack;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -89,6 +104,7 @@ public class BillsFragment extends Fragment {
         View view = fragmentBillsBinding.getRoot();
         addBillsViewModel = new AddBillsViewModel(getContext(),this);
         fragmentBillsBinding.setAddbillsviewmodel(addBillsViewModel);
+        locationTrack = new LocationTrack(getContext());
         mySharedPreference = MySharedPreference.getInstance();
         loginModel = mySharedPreference.Get_UserData(getActivity());
         user_id = loginModel.getId();
@@ -103,6 +119,31 @@ public class BillsFragment extends Fragment {
         main_branch_id = "13";
         sub_branch_id = "16";
         ware_houses_id = "9";
+        if (checkPermissions()){
+            if (isLocationEnabled()){
+                if (locationTrack.canGetLocation()) {
+
+                    LocationParams params = new LocationParams.Builder()
+                            .setAccuracy(LocationAccuracy.HIGH)
+                            .setDistance(1f)
+                            .setInterval(5 * 1000)
+                            .build();
+                    SmartLocation smart = new SmartLocation.Builder(getContext()).logging(true).build();
+                    smart.location().config(params).start(this);
+                }else {
+                    locationTrack.showSettingsAlert();
+                }
+            }else {
+                Toast.makeText(getContext(), "الرجاء فتح تحديد الموقع الخاص بك", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            }
+
+        }else {
+            requestPermissions();
+
+        }
+
 
         /*if (fatoraDetailList.isEmpty()){
             fragmentBillsBinding.etPaid.setText("0");
@@ -330,12 +371,7 @@ public class BillsFragment extends Fragment {
                 create_products_popup();
             }
         });
-        fragmentBillsBinding.btnAddBill2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                validation();
-            }
-        });
+
         fragmentBillsBinding.etProductName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -345,8 +381,10 @@ public class BillsFragment extends Fragment {
         return  view;
     }
 
-
-        private void create_products_popup() {
+    private boolean checkPermissions() {
+        return ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
+    private void create_products_popup() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view2 = inflater.inflate(R.layout.products_dialog, null);
@@ -393,9 +431,9 @@ public class BillsFragment extends Fragment {
         bill_date = fragmentBillsBinding.etBillDate.getText().toString();
         if(!TextUtils.isEmpty(client_name)&&!TextUtils.isEmpty(bill_num2)&&!TextUtils.isEmpty(bill_date)&&!fatoraDetailList.isEmpty()){
             if (fragmentBillsBinding.etAfterDiscount.getText().equals("0")){
-                addBillsViewModel.add_bill(user_id,fragmentBillsBinding.etBillNum.getText().toString(),bill_date,pay_id,"",client_id,main_branch_id,sub_branch_id,ware_houses_id,fragmentBillsBinding.etAllTotalPrice.getText().toString(),price_after_discount,"0",paid+"",remain+"","byan",fatoraDetailList);
+                addBillsViewModel.add_bill(user_id,fragmentBillsBinding.etBillNum.getText().toString(),bill_date,pay_id,"",client_id,main_branch_id,sub_branch_id,ware_houses_id,fragmentBillsBinding.etAllTotalPrice.getText().toString(),price_after_discount,"0",paid+"",remain+"","byan",fatoraDetailList,tvLatitude,tvLongitude);
             }else {
-                addBillsViewModel.add_bill(user_id,fragmentBillsBinding.etBillNum.getText().toString(),bill_date,pay_id,"",client_id,main_branch_id,sub_branch_id,ware_houses_id,fragmentBillsBinding.etAllTotalPrice.getText().toString(),price_after_discount,"0",paid+"",remain+"","byan",fatoraDetailList);
+                addBillsViewModel.add_bill(user_id,fragmentBillsBinding.etBillNum.getText().toString(),bill_date,pay_id,"",client_id,main_branch_id,sub_branch_id,ware_houses_id,fragmentBillsBinding.etAllTotalPrice.getText().toString(),price_after_discount,"0",paid+"",remain+"","byan",fatoraDetailList,tvLatitude,tvLongitude);
             }
 
         }else {
@@ -561,6 +599,30 @@ public class BillsFragment extends Fragment {
     public void onResume() {
         fatoraDetailList = databaseClass.getDao().getallbills("1");
         getAllBills(fatoraDetailList);
+        if (checkPermissions()){
+            if (isLocationEnabled()){
+                if (locationTrack.canGetLocation()) {
+
+                    LocationParams params = new LocationParams.Builder()
+                            .setAccuracy(LocationAccuracy.HIGH)
+                            .setDistance(1f)
+                            .setInterval(5 * 1000)
+                            .build();
+                    SmartLocation smart = new SmartLocation.Builder(getContext()).logging(true).build();
+                    smart.location().config(params).start(this);
+                }else {
+                    locationTrack.showSettingsAlert();
+                }
+            }else {
+                Toast.makeText(getContext(), "الرجاء فتح تحديد الموقع الخاص بك", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            }
+
+        }else {
+            requestPermissions();
+
+        }
         super.onResume();
     }
 
@@ -1185,5 +1247,30 @@ public class BillsFragment extends Fragment {
         }else {
             Toast.makeText(getActivity(), "لا يوجد فواتير لعرض نسبة الخصم", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onLocationUpdated(Location location) {
+        tvLatitude = location.getLatitude();
+        tvLongitude = location.getLongitude();
+        fragmentBillsBinding.btnAddBill2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                validation();
+            }
+        });
+    }
+    private void requestPermissions() {
+        ActivityCompat.requestPermissions(getActivity(), new String[]{
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_ID);
+
+    }
+
+    // method to check
+    // if location is enabled
+    private boolean isLocationEnabled() {
+        LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 }

@@ -107,53 +107,6 @@ public class AddVisitActivity extends AppCompatActivity implements OnLocationUpd
         permissions.add(ACCESS_FINE_LOCATION);
         permissions.add(ACCESS_COARSE_LOCATION);
 
-        /*permissionsToRequest = findUnAskedPermissions(permissions);
-        //get the permissions we have asked for before but are not granted..
-        //we will store this in a global list to access later.
-
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-
-            if (permissionsToRequest.size() > 0)
-                requestPermissions(permissionsToRequest.toArray(new String[permissionsToRequest.size()]), ALL_PERMISSIONS_RESULT);
-        }*/
-
-       /* activityAddVisitBinding.btnAddBill2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-
-
-
-                if (locationTrack.canGetLocation()) {
-                    LocationParams params = new LocationParams.Builder()
-                            .setAccuracy(LocationAccuracy.HIGH)
-                            .setDistance(1f)
-                            .setInterval(5 * 1000)
-                            .build();
-                    SmartLocation smart = new SmartLocation.Builder(AddVisitActivity.this).logging(true).build();
-                    smart.location().config(params).start(this);
-                    SmartLocation.with(AddVisitActivity.this).location()
-                            .start(new OnLocationUpdatedListener() {
-                                @Override
-                                public void onLocationUpdated(Location location) {
-                                    tvLatitude = location.getLongitude();
-                                    tvLongitude = location.getLatitude();
-                                    Toast.makeText(getApplicationContext(), "Longitude:" + tvLongitude + "\nLatitude:" + tvLatitude, Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                    validation();
-                    /*double longitude = locationTrack.getLongitude();
-                    double latitude = locationTrack.getLatitude();
-                    //validation(latitude,longitude);
-                } else {
-
-                    locationTrack.showSettingsAlert();
-                }
-
-            }
-        });*/
     }
 
     private void validation() {

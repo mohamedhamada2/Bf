@@ -67,6 +67,29 @@ public class Bill {
     @Expose
     private List<FatoraDetail> fatoraDetails = null;
 
+    public String getLat() {
+        return lat;
+    }
+
+    public void setLat(String lat) {
+        this.lat = lat;
+    }
+
+    public String getLon() {
+        return lon;
+    }
+
+    public void setLon(String lon) {
+        this.lon = lon;
+    }
+
+    @SerializedName("lat")
+    @Expose
+    private String lat;
+    @SerializedName("lon")
+    @Expose
+    private String lon;
+
     public String getUserId() {
         return userId;
     }

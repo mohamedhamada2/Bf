@@ -98,7 +98,6 @@
                         android:layout_marginLeft="@dimen/_10sdp"
                         android:background="@drawable/txt_login_background"
                         android:elevation="@dimen/_5sdp"
-                        android:clickable="true"
                         android:editable="false"
                         android:focusable="false"
                         android:hint="تاريخ الفاتورة"

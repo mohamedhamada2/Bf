@@ -111,14 +111,14 @@ public class AddSalaryActivity extends AppCompatActivity {
             }
 
         };
-        activityAddSalaryBinding.etBillDate.setOnClickListener(new View.OnClickListener() {
+        /*activityAddSalaryBinding.etBillDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new DatePickerDialog(AddSalaryActivity.this, date_picker_dialog, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                         myCalendar.get(Calendar.DAY_OF_MONTH)).show();
             }
-        });
+        });*/
         activityAddSalaryBinding.spinnerType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {

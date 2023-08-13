@@ -185,6 +185,9 @@ public class AddBillsViewModel {
                             intent.putExtra("flag",1);
                             intent.putExtra("id",response.body().getFatora_id());
                             context.startActivity(intent);*/
+                        }else if (response.body().getSuccess()==2){
+                            pd.dismiss();
+                            Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }

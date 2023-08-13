@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.mz.bf.Utilities.Utilities;
 import com.mz.bf.addbill.Bill;
@@ -179,6 +180,9 @@ public class AddReturnsViewModel {
                         if (response.body().getSuccess()==1){
                             pd.dismiss();
                             addReturnsFragment.DeleteProducts(response.body().getFatora_id());
+                        }else {
+                            pd.dismiss();
+                            Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }

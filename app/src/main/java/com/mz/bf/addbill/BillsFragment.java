@@ -75,7 +75,7 @@ public class BillsFragment extends Fragment implements OnLocationUpdatedListener
     AddBillsViewModel addBillsViewModel;
     Calendar myCalendar;
     DatePickerDialog.OnDateSetListener date_picker_dialog;
-    String main_branch_id,sub_branch_id,ware_houses_id,type_id,product_name,product_id,product_price,product_amount,discount,bonous,pay_id,client_id,bill_date,bill_num_dfter,client_name,bill_num2,user_id,car_id;
+    String main_branch_id,sub_branch_id,ware_houses_id,type_id,product_name,product_id,product_price,product_amount,discount,bonous,pay_id,client_id,bill_date,bill_num_dfter,client_name,bill_num2,user_id,car_id,product_discount,product_bounos;
     List<SpinnerModel> main_branches_list,sub_branches_list,ware_houses_list;
     List<String> maintitlelist,subtitlelist,warehousestitlelist,typelist,paidlist;
     List<Product> productList;
@@ -846,6 +846,8 @@ public class BillsFragment extends Fragment implements OnLocationUpdatedListener
         fragmentBillsBinding.typeSpinner.setSelection(0);
         type_id = "1";
         product_amount ="1";
+        product_discount = "0";
+        product_bounos = "0";
         product_price = product.getPacketSellPrice();
         amount_available = product.getPacketRasied();
         price = Double.parseDouble(product_price);
@@ -864,8 +866,14 @@ public class BillsFragment extends Fragment implements OnLocationUpdatedListener
                             amount_available = product.getPacketRasied();
                             product_price = product.getPacketSellPrice();
                             product_amount = fragmentBillsBinding.etProductAmout.getText().toString();
+                            product_discount = fragmentBillsBinding.etProductDiscount.getText().toString();
+                            product_bounos = fragmentBillsBinding.etBounos.getText().toString();
                             price = Double.parseDouble(product_price);
-                            total_price = price*Double.parseDouble(product_amount);
+                            if (TextUtils.isEmpty(product_discount)||product_discount.equals("0")){
+                                total_price = price*Double.parseDouble(product_amount);
+                            }else {
+                                total_price = price*Double.parseDouble(product_amount)-(price*Double.parseDouble(product_amount)*(Integer.parseInt(product_discount)/100));
+                            }
                             fragmentBillsBinding.etProductPrice.setText(product_price);
                             fragmentBillsBinding.etTotalPrice.setText(total_price+"");
 
@@ -874,8 +882,14 @@ public class BillsFragment extends Fragment implements OnLocationUpdatedListener
                             amount_available = product.getOneRasied();
                             product_price = product.getOneSellPrice();
                             product_amount = fragmentBillsBinding.etProductAmout.getText().toString();
+                            product_bounos = fragmentBillsBinding.etBounos.getText().toString();
+                            product_discount = fragmentBillsBinding.etProductDiscount.getText().toString();
                             price = Double.parseDouble(product_price);
-                            total_price = price * Double.parseDouble(product_amount+"");
+                            if (TextUtils.isEmpty(product_discount)||product_discount.equals("0")){
+                                total_price = price*Double.parseDouble(product_amount);
+                            }else {
+                                total_price = price*Double.parseDouble(product_amount)-(price*Double.parseDouble(product_amount)*Integer.parseInt(product_discount)/100);
+                            }
                             fragmentBillsBinding.etProductPrice.setText(product_price);
                             fragmentBillsBinding.etTotalPrice.setText(total_price+"");
 
@@ -936,6 +950,31 @@ public class BillsFragment extends Fragment implements OnLocationUpdatedListener
 
             }
         });
+        fragmentBillsBinding.etProductDiscount.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.toString().equals("")){
+                    product_discount ="0";
+                    total_price = price*Double.parseDouble(product_amount);
+                    fragmentBillsBinding.etTotalPrice.setText(total_price+"");
+                }else {
+                    product_discount = charSequence.toString();
+                    total_price = price*Double.parseDouble(product_amount)-price*Double.parseDouble(product_amount)*Integer.parseInt(product_discount)/100;
+                    fragmentBillsBinding.etTotalPrice.setText(total_price+"");
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
 
         if (TextUtils.isEmpty(product_amount)){
@@ -970,8 +1009,8 @@ public class BillsFragment extends Fragment implements OnLocationUpdatedListener
             fatoraDetail.setType(type_id);
             fatoraDetail.setAmount(product_amount);
             fatoraDetail.setSell_price(product_price);
-            fatoraDetail.setProduct_discount("0");
-            fatoraDetail.setProduct_pouns("0");
+            fatoraDetail.setProduct_discount(product_discount);
+            fatoraDetail.setProduct_pouns(product_bounos);
             fatoraDetail.setNotes("");
             fatoraDetail.setFatora_type("1");
             fatoraDetail.setTotal(total_price+"");
@@ -1199,8 +1238,8 @@ public class BillsFragment extends Fragment implements OnLocationUpdatedListener
                     fatoraDetail.setType(type_id);
                     fatoraDetail.setAmount(et_product_amount.getText().toString());
                     fatoraDetail.setSell_price(et_product_price.getText().toString());
-                    fatoraDetail.setProduct_discount("0");
-                    fatoraDetail.setProduct_pouns("0");
+                    fatoraDetail.setProduct_discount(product_discount);
+                    fatoraDetail.setProduct_pouns(product_bounos);
                     fatoraDetail.setFatora_type("1");
                     fatoraDetail.setNotes("");
                     fatoraDetail.setTotal(et_product_total_price.getText().toString());

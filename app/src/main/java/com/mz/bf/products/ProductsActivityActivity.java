@@ -51,7 +51,12 @@ public class ProductsActivityActivity extends AppCompatActivity {
                         }
                         if(!isloading &&(totalitemcount-visibleitemcount)<= pastvisibleitem+view_threshold){
                             page++;
-                            productViewModel.PerformPagination(page,user_id,car_num);
+                            if (activityProductsActivityBinding.etSearch.getText().toString().equals("")){
+                                productViewModel.PerformPagination(page,user_id,car_num);
+                            }else {
+                                productViewModel.PerformSearchPagination(page,car_num,activityProductsActivityBinding.etSearch.getText().toString(),user_id);
+                            }
+
                             isloading = true;
                         }
                     }
@@ -73,6 +78,13 @@ public class ProductsActivityActivity extends AppCompatActivity {
         loginModel = mySharedPreference.Get_UserData(this);
         user_id = loginModel.getId();
         car_num = loginModel.getCarNumber();
+        activityProductsActivityBinding.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String search = activityProductsActivityBinding.etSearch.getText().toString();
+                productViewModel.search_product(1,car_num,search,user_id);
+            }
+        });
         productViewModel.get_Products(1,user_id,car_num);
     }
 

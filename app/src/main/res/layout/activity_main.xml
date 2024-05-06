@@ -24,14 +24,15 @@
                 android:src="@drawable/ic_baseline_menu_"
                 android:layout_marginRight="@dimen/_10sdp"
                 android:onClick="showpopup"/>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
                 android:fontFamily="@font/cairo_bold"
-                android:textSize="@dimen/_16ssp"
+                android:text="pure"
                 android:textColor="@color/white"
-                android:text="الأسطورة"
-                android:layout_centerInParent="true"/>
+                android:textSize="@dimen/_16ssp" />
         </RelativeLayout>
 
     </androidx.appcompat.widget.Toolbar>

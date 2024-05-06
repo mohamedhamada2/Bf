@@ -67,6 +67,18 @@ public class Bill {
     @Expose
     private List<FatoraDetail> fatoraDetails = null;
 
+    public String getMandoub_discount() {
+        return mandoub_discount;
+    }
+
+    public void setMandoub_discount(String mandoub_discount) {
+        this.mandoub_discount = mandoub_discount;
+    }
+
+    @SerializedName("mandoub_discount")
+    @Expose
+    String mandoub_discount;
+
     public String getLat() {
         return lat;
     }

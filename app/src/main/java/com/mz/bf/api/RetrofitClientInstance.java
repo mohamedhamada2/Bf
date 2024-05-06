@@ -21,7 +21,7 @@ public class RetrofitClientInstance {
                 .writeTimeout(50, TimeUnit.SECONDS).build();
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
-                    .baseUrl("http://aesica.erp-systems.org/")
+                    .baseUrl("https://pure-therm.erp-systems.org/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(okHttpClient)
                     .build();

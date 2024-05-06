@@ -62,12 +62,14 @@ public class ProfileActivity extends AppCompatActivity {
         name = activityProfileBinding.etUsername.getText().toString().trim();
         phone = activityProfileBinding.etPhone.getText().toString().trim();
         password = activityProfileBinding.etPassword.getText().toString();
-        if (!TextUtils.isEmpty(name)&&!TextUtils.isEmpty(password)){
+        if (!TextUtils.isEmpty(name)){
             if (filepath != null){
                 profileViewModel.update_user_with_img(user_id,name,password,filepath);
             }else {
                 profileViewModel.update_user_without_img(user_id,name,password);
             }
+        }else {
+            activityProfileBinding.etUsername.setError("أدخل اسمك من فضلك");
         }
     }
 

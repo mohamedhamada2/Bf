@@ -145,7 +145,7 @@ public class AddBillsViewModel {
         }
     }
 
-    public void add_bill(String user_id, String bill_num, String bill_date, String pay_id, String s2, String client_id, String main_branch_id, String sub_branch_id, String ware_houses_id,String price_before_discount ,Double totalPrice, String discount, String paid, String remain, String byan, List<FatoraDetail> fatoraDetailList,Double lat,Double lon) {
+    public void add_bill(String user_id, String bill_num, String bill_date, String pay_id, String s2, String client_id, String main_branch_id, String sub_branch_id, String ware_houses_id,String price_before_discount ,Double totalPrice, String discount, String paid, String remain, String byan, List<FatoraDetail> fatoraDetailList,Double lat,Double lon,String mandoub_discount) {
         Log.e("latt",lat+"");
         Log.e("long",lon+"");
         Bill bill = new Bill();
@@ -166,6 +166,7 @@ public class AddBillsViewModel {
         bill.setFatoraDetails(fatoraDetailList);
         bill.setLat(lat+"");
         bill.setLon(lon+"");
+        bill.setMandoub_discount(mandoub_discount);
         if (Utilities.isNetworkAvailable(context)){
             ProgressDialog pd = new ProgressDialog(context);
             pd.setMessage("تحميل ...");

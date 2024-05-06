@@ -75,7 +75,7 @@ public class BillsFragment extends Fragment implements OnLocationUpdatedListener
     AddBillsViewModel addBillsViewModel;
     Calendar myCalendar;
     DatePickerDialog.OnDateSetListener date_picker_dialog;
-    String main_branch_id,sub_branch_id,ware_houses_id,type_id,product_name,product_id,product_price,product_amount,discount,bonous,pay_id,client_id,bill_date,bill_num_dfter,client_name,bill_num2,user_id,car_id,product_discount,product_bounos;
+    String main_branch_id,sub_branch_id,ware_houses_id,type_id,product_name,product_id,product_price,product_amount,discount,bonous,pay_id,client_id,bill_date,bill_num_dfter,client_name,bill_num2,user_id,car_id,product_discount,product_bounos,more_discount;
     List<SpinnerModel> main_branches_list,sub_branches_list,ware_houses_list;
     List<String> maintitlelist,subtitlelist,warehousestitlelist,typelist,paidlist;
     List<Product> productList;
@@ -119,6 +119,7 @@ public class BillsFragment extends Fragment implements OnLocationUpdatedListener
         main_branch_id = "13";
         sub_branch_id = "16";
         ware_houses_id = "9";
+        fragmentBillsBinding.etDiscount2.setText("0");
         if (checkPermissions()){
             if (isLocationEnabled()){
                 if (locationTrack.canGetLocation()) {
@@ -364,6 +365,58 @@ public class BillsFragment extends Fragment implements OnLocationUpdatedListener
 
                 }
             });
+        fragmentBillsBinding.etDiscount2.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                try {
+                    if (totalPrice != 0.0) {
+                        if (charSequence.toString().equals("")) {
+                            totalPrice = Double.parseDouble(fragmentBillsBinding.etAllTotalPrice.getText().toString());
+                            if (fragmentBillsBinding.etDiscount.getText().toString().equals("0")) {
+                                price_after_discount = totalPrice;
+                                fragmentBillsBinding.etAllTotalPrice.setText(totalPrice + "");
+                                fragmentBillsBinding.etAfterDiscount.setText(price_after_discount + "");
+                                fragmentBillsBinding.etRemain2.setText(totalPrice + "");
+                                fragmentBillsBinding.etPaid.setText("0");
+                            } else {
+                                price_after_discount = totalPrice - totalPrice * Double.parseDouble(fragmentBillsBinding.etDiscount.getText().toString()) / 100;
+                                fragmentBillsBinding.etAllTotalPrice.setText(totalPrice + "");
+                                fragmentBillsBinding.etAfterDiscount.setText(price_after_discount + "");
+                                fragmentBillsBinding.etRemain2.setText(price_after_discount + "");
+                                fragmentBillsBinding.etPaid.setText("0");
+                            }
+                        } else {
+                            fragmentBillsBinding.etPaid.setText("0");
+                            price_after_discount = totalPrice - totalPrice * Double.parseDouble(fragmentBillsBinding.etDiscount.getText().toString()) / 100 - Double.parseDouble(String.valueOf(charSequence));
+                            fragmentBillsBinding.etAllTotalPrice.setText(totalPrice + "");
+                            fragmentBillsBinding.etAfterDiscount.setText(price_after_discount + "");
+                            fragmentBillsBinding.etRemain2.setText(price_after_discount + "");
+                            fragmentBillsBinding.etPaid.setText("0");
+                        }
+                    }
+                } catch (Exception e) {
+                    Log.e("exp2",e.getMessage());
+                    fragmentBillsBinding.etDiscount.setText("0");
+                    totalPrice = Double.parseDouble(fragmentBillsBinding.etAllTotalPrice.getText().toString());
+                    price_after_discount = totalPrice;
+                    fragmentBillsBinding.etAllTotalPrice.setText(totalPrice + "");
+                    fragmentBillsBinding.etAfterDiscount.setText(price_after_discount + "");
+                    fragmentBillsBinding.etRemain2.setText(totalPrice + "");
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         fragmentBillsBinding.txtProductInCart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -429,11 +482,16 @@ public class BillsFragment extends Fragment implements OnLocationUpdatedListener
         client_name = fragmentBillsBinding.etClientName.getText().toString();
         bill_num2 = fragmentBillsBinding.etBillNum.getText().toString();
         bill_date = fragmentBillsBinding.etBillDate.getText().toString();
+        if (fragmentBillsBinding.etDiscount2.getText().toString().equals("")){
+            more_discount = "0";
+        }else {
+            more_discount = fragmentBillsBinding.etDiscount2.getText().toString();
+        }
         if(!TextUtils.isEmpty(client_name)&&!TextUtils.isEmpty(bill_num2)&&!TextUtils.isEmpty(bill_date)&&!fatoraDetailList.isEmpty()){
             if (fragmentBillsBinding.etAfterDiscount.getText().equals("0")){
-                addBillsViewModel.add_bill(user_id,fragmentBillsBinding.etBillNum.getText().toString(),bill_date,pay_id,"",client_id,main_branch_id,sub_branch_id,ware_houses_id,fragmentBillsBinding.etAllTotalPrice.getText().toString(),price_after_discount,"0",paid+"",remain+"","byan",fatoraDetailList,tvLatitude,tvLongitude);
+                addBillsViewModel.add_bill(user_id,fragmentBillsBinding.etBillNum.getText().toString(),bill_date,pay_id,"",client_id,main_branch_id,sub_branch_id,ware_houses_id,fragmentBillsBinding.etAllTotalPrice.getText().toString(),price_after_discount,"0",paid+"",remain+"","byan",fatoraDetailList,tvLatitude,tvLongitude,more_discount);
             }else {
-                addBillsViewModel.add_bill(user_id,fragmentBillsBinding.etBillNum.getText().toString(),bill_date,pay_id,"",client_id,main_branch_id,sub_branch_id,ware_houses_id,fragmentBillsBinding.etAllTotalPrice.getText().toString(),price_after_discount,"0",paid+"",remain+"","byan",fatoraDetailList,tvLatitude,tvLongitude);
+                addBillsViewModel.add_bill(user_id,fragmentBillsBinding.etBillNum.getText().toString(),bill_date,pay_id,"",client_id,main_branch_id,sub_branch_id,ware_houses_id,fragmentBillsBinding.etAllTotalPrice.getText().toString(),price_after_discount,"0",paid+"",remain+"","byan",fatoraDetailList,tvLatitude,tvLongitude,more_discount);
             }
 
         }else {
@@ -1063,21 +1121,41 @@ public class BillsFragment extends Fragment implements OnLocationUpdatedListener
             }
         try {
             if (value.equals("0")) {
+                if (fragmentBillsBinding.etDiscount2.getText().toString().equals("")){
+                    fragmentBillsBinding.etDiscount.setText("0");
+                    fragmentBillsBinding.etAllTotalPrice.setText(totalPrice+"");
+                    //totalPrice = Double.parseDouble(fragmentBillsBinding.etAllTotalPrice.getText().toString());
+                    price_after_discount = totalPrice;
+                    fragmentBillsBinding.etPaid.setText("0");
+                    fragmentBillsBinding.etAfterDiscount.setText(price_after_discount+"");
+                    fragmentBillsBinding.etRemain2.setText(totalPrice+"");
+                }else {
+                    fragmentBillsBinding.etDiscount.setText(value);
+                    price_after_discount = totalPrice- Double.parseDouble(fragmentBillsBinding.etDiscount2.getText().toString());
+                    fragmentBillsBinding.etAllTotalPrice.setText(totalPrice+"");
+                    fragmentBillsBinding.etAfterDiscount.setText(price_after_discount+"");
+                    fragmentBillsBinding.etRemain2.setText(price_after_discount+"");
+                    fragmentBillsBinding.etPaid.setText("0");
+                }
                 //Toast.makeText(getActivity(), totalPrice+"", Toast.LENGTH_SHORT).show();
-                fragmentBillsBinding.etDiscount.setText("0");
-                fragmentBillsBinding.etAllTotalPrice.setText(totalPrice+"");
-                //totalPrice = Double.parseDouble(fragmentBillsBinding.etAllTotalPrice.getText().toString());
-                price_after_discount = totalPrice;
-                fragmentBillsBinding.etPaid.setText("0");
-                fragmentBillsBinding.etAfterDiscount.setText(price_after_discount+"");
-                fragmentBillsBinding.etRemain2.setText(totalPrice+"");
+
             }else {
-                fragmentBillsBinding.etDiscount.setText(value);
-                price_after_discount = totalPrice- Double.parseDouble(fragmentBillsBinding.etDiscount.getText().toString());
-                fragmentBillsBinding.etAllTotalPrice.setText(totalPrice+"");
-                fragmentBillsBinding.etAfterDiscount.setText(price_after_discount+"");
-                fragmentBillsBinding.etRemain2.setText(price_after_discount+"");
-                fragmentBillsBinding.etPaid.setText("0");
+                if (fragmentBillsBinding.etDiscount2.getText().toString().equals("")){
+                    fragmentBillsBinding.etDiscount.setText(value);
+                    price_after_discount = totalPrice-totalPrice*Double.parseDouble(value)/100;
+                    fragmentBillsBinding.etAllTotalPrice.setText(totalPrice+"");
+                    fragmentBillsBinding.etAfterDiscount.setText(price_after_discount+"");
+                    fragmentBillsBinding.etRemain2.setText(price_after_discount+"");
+                    fragmentBillsBinding.etPaid.setText("0");
+                }else {
+                    fragmentBillsBinding.etDiscount.setText(value);
+                    price_after_discount = totalPrice-totalPrice*Double.parseDouble(value)/100- Double.parseDouble(fragmentBillsBinding.etDiscount2.getText().toString());
+                    fragmentBillsBinding.etAllTotalPrice.setText(totalPrice+"");
+                    fragmentBillsBinding.etAfterDiscount.setText(price_after_discount+"");
+                    fragmentBillsBinding.etRemain2.setText(price_after_discount+"");
+                    fragmentBillsBinding.etPaid.setText("0");
+                }
+
             }
         }catch (Exception e){
             fragmentBillsBinding.etDiscount.setText("0");
@@ -1087,7 +1165,7 @@ public class BillsFragment extends Fragment implements OnLocationUpdatedListener
             fragmentBillsBinding.etAfterDiscount.setText(price_after_discount+"");
             fragmentBillsBinding.etRemain2.setText(totalPrice+"");
         }
-            return totalPrice;
+        return totalPrice;
     }
 
     public void setypespinner(List<String> typelist) {
@@ -1270,7 +1348,11 @@ public class BillsFragment extends Fragment implements OnLocationUpdatedListener
                 }else {
                     fragmentBillsBinding.etPaid.setText("0");
                     fragmentBillsBinding.etDiscount.setText(value);
-                    price_after_discount = totalPrice-totalPrice*Double.parseDouble(value)/100;
+                    if (fragmentBillsBinding.etDiscount2.getText().toString().equals("")){
+                        price_after_discount = totalPrice-totalPrice*Double.parseDouble(value)/100;
+                    }else {
+                        price_after_discount = totalPrice-totalPrice*Double.parseDouble(value)/100- Double.parseDouble(fragmentBillsBinding.etDiscount2.getText().toString());
+                    }
                     fragmentBillsBinding.etAllTotalPrice.setText(totalPrice+"");
                     fragmentBillsBinding.etAfterDiscount.setText(price_after_discount+"");
                     fragmentBillsBinding.etRemain2.setText(price_after_discount+"");

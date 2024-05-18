@@ -16,6 +16,10 @@
         android:title="إضافة زيارة" />
     <item android:id="@+id/get_visits"
         android:title="عرض الزيارات" />
+    <item android:id="@+id/add_service"
+        android:title="إضافة خدمة عملاء" />
+    <item android:id="@+id/all_services"
+        android:title="عرض خدمات العملاء"/>
     <item android:id="@+id/products"
         android:title="المخزون" />
     <item android:id="@+id/safe"

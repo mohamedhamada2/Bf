@@ -10,33 +10,48 @@ public class Visit {
     @SerializedName("representive_id_fk")
     @Expose
     private String representiveIdFk;
-    @SerializedName("client_id_fk")
-    @Expose
-    private String clientIdFk;
     @SerializedName("client_name")
     @Expose
     private String clientName;
+    @SerializedName("client_mobile")
+    @Expose
+    private String clientMobile;
+    @SerializedName("address")
+    @Expose
+    private String address;
     @SerializedName("lat_map")
     @Expose
     private String latMap;
     @SerializedName("long_map")
     @Expose
     private String longMap;
-    @SerializedName("date")
+    @SerializedName("start_time")
     @Expose
-    private String date;
-    @SerializedName("date_ar")
+    private String startTime;
+    @SerializedName("end_time")
     @Expose
-    private String dateAr;
-    @SerializedName("time")
+    private String endTime;
+    @SerializedName("day_of_week")
     @Expose
-    private String time;
+    private Object dayOfWeek;
+    @SerializedName("check_type")
+    @Expose
+    private String checkType;
+    @SerializedName("diff_minutes")
+    @Expose
+    private Object diffMinutes;
+    @SerializedName("image")
+    @Expose
+    private Object image;
     @SerializedName("notes")
     @Expose
     private String notes;
-    @SerializedName("day_of_week")
+    @SerializedName("date_ar")
     @Expose
-    private String dayOfWeek;
+    private String dateAr;
+    @SerializedName("date")
+    @Expose
+    private String date;
 
     public String getId() {
         return id;
@@ -54,20 +69,28 @@ public class Visit {
         this.representiveIdFk = representiveIdFk;
     }
 
-    public String getClientIdFk() {
-        return clientIdFk;
-    }
-
-    public void setClientIdFk(String clientIdFk) {
-        this.clientIdFk = clientIdFk;
-    }
-
     public String getClientName() {
         return clientName;
     }
 
     public void setClientName(String clientName) {
         this.clientName = clientName;
+    }
+
+    public String getClientMobile() {
+        return clientMobile;
+    }
+
+    public void setClientMobile(String clientMobile) {
+        this.clientMobile = clientMobile;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getLatMap() {
@@ -86,28 +109,52 @@ public class Visit {
         this.longMap = longMap;
     }
 
-    public String getDate() {
-        return date;
+    public String getStartTime() {
+        return startTime;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
     }
 
-    public String getDateAr() {
-        return dateAr;
+    public String getEndTime() {
+        return endTime;
     }
 
-    public void setDateAr(String dateAr) {
-        this.dateAr = dateAr;
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 
-    public String getTime() {
-        return time;
+    public Object getDayOfWeek() {
+        return dayOfWeek;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setDayOfWeek(Object dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
+    }
+
+    public String getCheckType() {
+        return checkType;
+    }
+
+    public void setCheckType(String checkType) {
+        this.checkType = checkType;
+    }
+
+    public Object getDiffMinutes() {
+        return diffMinutes;
+    }
+
+    public void setDiffMinutes(Object diffMinutes) {
+        this.diffMinutes = diffMinutes;
+    }
+
+    public Object getImage() {
+        return image;
+    }
+
+    public void setImage(Object image) {
+        this.image = image;
     }
 
     public String getNotes() {
@@ -118,11 +165,19 @@ public class Visit {
         this.notes = notes;
     }
 
-    public String getDayOfWeek() {
-        return dayOfWeek;
+    public String getDateAr() {
+        return dateAr;
     }
 
-    public void setDayOfWeek(String dayOfWeek) {
-        this.dayOfWeek = dayOfWeek;
+    public void setDateAr(String dateAr) {
+        this.dateAr = dateAr;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }

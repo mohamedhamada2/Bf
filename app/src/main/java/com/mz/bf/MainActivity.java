@@ -31,6 +31,8 @@ import com.mz.bf.addbill.BillsFragment;
 import com.mz.bf.client_safe.MandoubSafeActivity;
 import com.mz.bf.clientaccounting.ClientAccountingActivity;
 import com.mz.bf.clients.ClientsActivity;
+import com.mz.bf.customerservice.AllCustomerServicesActivity;
+import com.mz.bf.customerservice.CustomerServiceActivity;
 import com.mz.bf.discountbill.DiscountbillFragment;
 import com.mz.bf.allbills.AllBillsFragment;
 import com.mz.bf.products.ProductsActivityActivity;
@@ -128,10 +130,20 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 startActivity(new Intent(MainActivity.this, PaymentActivity.class));
                 break;
             case R.id.add_visit:
-                startActivity(new Intent(MainActivity.this, AddVisitActivity.class));
+                Intent intent = new Intent(MainActivity.this, AddVisitActivity.class);
+                intent.putExtra("flag",1);
+                startActivity(intent);
                 break;
             case R.id.get_visits:
                 startActivity(new Intent(MainActivity.this, VisitActivity.class));
+                break;
+            case R.id.add_service:
+                Intent intent2 = new Intent(MainActivity.this, CustomerServiceActivity.class);
+                intent2.putExtra("flag",1);
+                startActivity(intent2);
+                break;
+            case R.id.all_services:
+                startActivity(new Intent(MainActivity.this, AllCustomerServicesActivity.class));
                 break;
             case R.id.products:
                 startActivity(new Intent(MainActivity.this, ProductsActivityActivity.class));

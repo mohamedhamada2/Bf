@@ -75,6 +75,13 @@
             android:fontFamily="@font/cairo_semibold"
             android:textSize="@dimen/_13ssp"
             android:padding="@dimen/_3sdp"/>
+        <ImageView
+            android:id="@+id/front_img"
+            android:layout_width="131dp"
+            android:layout_height="131dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:background="@drawable/group_115"/>
         <Button
             android:id="@+id/btn_add_bill2"
             android:layout_width="match_parent"

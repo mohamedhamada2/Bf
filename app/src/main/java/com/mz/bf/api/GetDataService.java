@@ -169,6 +169,10 @@ public interface GetDataService{
     Call<VisitModel> get_all_visits(@Field("user_id")String user_id,
                                     @Field("page")Integer page);
     @FormUrlEncoded
+    @POST("Api/GetCustomerService")
+    Call<VisitModel> getCustomerService(@Field("representive_id_fk")String user_id,
+                                    @Field("page")Integer page);
+    @FormUrlEncoded
     @POST("Api/clients_locations")
     Call<ClientLocation> get_all_clients(@Field("user_id")String user_id,
                                          @Field("page")Integer page,
@@ -188,5 +192,47 @@ public interface GetDataService{
     @FormUrlEncoded
     @POST("Api/get_mandoub_safe")
     Call<SafeModel> get_mandoub_safe(@Field("user_id_fk")String user_id,@Field("day_date")String day_date);
+
+    @FormUrlEncoded
+    @POST("Api/AddCustomerService")
+    Call<SuccessModel> add_customer_service(@Field("representive_id_fk")String user_id,
+                                 @Field("client_name")String client_name,
+                                 @Field("client_mobile")String client_mobile,
+                                 @Field("address")String address,
+                                 @Field("long_map")String long_map,
+                                 @Field("lat_map")String lat_map);
+
+    @FormUrlEncoded
+    @POST("Api/EndCustomerService")
+    Call<SuccessModel> end_customer_service(@Field("visit_id")String user_id,
+                                            @Field("long_map")String long_map,
+                                            @Field("lat_map")String lat_map,
+                                            @Field("notes")String notes);
+
+    @Multipart
+    @POST("Api/EndCustomerService")
+    Call<SuccessModel> end_customer_service_with_img(@Part("visit_id")RequestBody visit_id,
+                                            @Part("long_map")RequestBody long_map,
+                                            @Part("lat_map")RequestBody lat_map,
+                                            @Part("notes")RequestBody notes,
+                                            @Part MultipartBody.Part img);
+
+    @FormUrlEncoded
+    @POST("Api/end_visit")
+    Call<SuccessModel> end_customer_visit(@Field("visit_id")String user_id,
+                                            @Field("long_map")String long_map,
+                                            @Field("lat_map")String lat_map,
+                                            @Field("notes")String notes);
+
+    @Multipart
+    @POST("Api/end_visit")
+    Call<SuccessModel> end_customer_visit_with_img(@Part("visit_id")RequestBody visit_id,
+                                                     @Part("long_map")RequestBody long_map,
+                                                     @Part("lat_map")RequestBody lat_map,
+                                                     @Part("notes")RequestBody notes,
+                                                     @Part MultipartBody.Part img);
+
+
 }
+
 

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,6 +72,7 @@ public class AllCustomerServicesAdapter extends RecyclerView.Adapter<AllCustomer
         txt_details.setText(visit.getNotes());
         if (visit.getImage() != null){
             Picasso.get().load(Constants.BASE_URL+"uploads/images/"+visit.getImage()).into(img);
+            Log.e("url",Constants.BASE_URL+"uploads/images/"+visit.getImage());
         }else {
             img.setVisibility(View.GONE);
         }

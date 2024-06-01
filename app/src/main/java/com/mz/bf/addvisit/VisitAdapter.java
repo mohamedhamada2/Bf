@@ -134,6 +134,9 @@ public class VisitAdapter extends RecyclerView.Adapter<VisitAdapter.VisitHolder>
                 btn_close_visit.setVisibility(View.GONE);
 
             }
+            txt_visit_num.setText(visit.getId());
+            txt_client_name.setText(visit.getClientName());
+            txt_visit_date.setText(visit.getStartTime());
         }
 
         public void add_visit(List<Visit> visitList2) {

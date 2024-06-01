@@ -182,15 +182,12 @@ public class CustomerServiceActivity extends AppCompatActivity implements OnLoca
     }
 
     private void Check_ReadPermission() {
-        if (ContextCompat.checkSelfPermission(CustomerServiceActivity.this, Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED
-                || ContextCompat.checkSelfPermission(CustomerServiceActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if (ContextCompat.checkSelfPermission(CustomerServiceActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED
                 || ContextCompat.checkSelfPermission(CustomerServiceActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             //Apply for multiple permissions together
             ActivityCompat.requestPermissions(CustomerServiceActivity.this, new String[]{
-                    Manifest.permission.CAMERA,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.READ_EXTERNAL_STORAGE
             }, IMG);

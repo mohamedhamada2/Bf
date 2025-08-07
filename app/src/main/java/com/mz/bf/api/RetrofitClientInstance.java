@@ -21,7 +21,7 @@ public class RetrofitClientInstance {
                 .writeTimeout(50, TimeUnit.SECONDS).build();
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
-                    .baseUrl("http://one-click.solutions/alastool_tex/")
+                    .baseUrl("https://alastool-tex.one-click.solutions/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(okHttpClient)
                     .build();

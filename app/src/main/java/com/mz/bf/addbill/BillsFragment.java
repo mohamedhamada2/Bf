@@ -1070,7 +1070,7 @@ public class BillsFragment extends Fragment implements OnLocationUpdatedListener
     public void setClientData(Client client) {
         client_id = client.getClientIdFk();
         fragmentBillsBinding.etClientName.setText(client.getClientName());
-        //addBillsViewModel.get_client_discount(client_id);
+        addBillsViewModel.get_client_discount(client_id);
         dialog2.dismiss();
     }
 

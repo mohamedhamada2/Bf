@@ -345,7 +345,7 @@ public class BillsFragment extends Fragment implements OnLocationUpdatedListener
                 public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                     try {
                         value = fragmentBillsBinding.etDiscount.getText().toString();
-                        price_after_discount = totalPrice-Double.parseDouble(value);
+                        price_after_discount = totalPrice-(Double.parseDouble(value)/100 * totalPrice);
                         fragmentBillsBinding.etAllTotalPrice.setText(totalPrice+"");
                         fragmentBillsBinding.etAfterDiscount.setText(price_after_discount+"");
                         fragmentBillsBinding.etRemain2.setText(totalPrice+"");
@@ -1034,7 +1034,7 @@ public class BillsFragment extends Fragment implements OnLocationUpdatedListener
                 fragmentBillsBinding.etRemain2.setText(totalPrice+"");
             }else {
                 fragmentBillsBinding.etDiscount.setText(value);
-                price_after_discount = totalPrice- Double.parseDouble(fragmentBillsBinding.etDiscount.getText().toString());
+                price_after_discount = totalPrice - (Double.parseDouble(fragmentBillsBinding.etDiscount.getText().toString())/100 * totalPrice);
                 fragmentBillsBinding.etAllTotalPrice.setText(totalPrice+"");
                 fragmentBillsBinding.etAfterDiscount.setText(price_after_discount+"");
                 fragmentBillsBinding.etRemain2.setText(price_after_discount+"");

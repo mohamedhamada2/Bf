@@ -691,9 +691,9 @@ public class AddReturnsFragment extends Fragment {
         product_id = product.getId();
         product_name = product.getProductCode();
         fragmentAddReturnsBinding.typeSpinner.setSelection(0);
-        type_id = "1";
+        type_id = "2";
         product_amount ="1";
-        product_price = product.getPacketSellPrice();
+        product_price = product.getOneSellPrice();
         price = Double.parseDouble(product_price);
         total_price = price*Double.parseDouble(product_amount);
         fragmentAddReturnsBinding.etProductPrice.setText(product_price);
@@ -706,14 +706,13 @@ public class AddReturnsFragment extends Fragment {
                 try {
                     if (product != null){
                         if (fragmentAddReturnsBinding.typeSpinner.getSelectedItemPosition()==0){
-                            type_id = "1";
+                            /*type_id = "1";
                             product_price = product.getPacketSellPrice();
                             product_amount = fragmentAddReturnsBinding.etProductAmout.getText().toString();
                             price = Double.parseDouble(product_price);
                             total_price = price*Double.parseDouble(product_amount);
                             fragmentAddReturnsBinding.etProductPrice.setText(product_price);
-                            fragmentAddReturnsBinding.etTotalPrice.setText(total_price+"");
-                        }else if (fragmentAddReturnsBinding.typeSpinner.getSelectedItemPosition()==1){
+                            fragmentAddReturnsBinding.etTotalPrice.setText(total_price+"");*/
                             type_id ="2";
                             product_price = product.getOneSellPrice();
                             product_amount = fragmentAddReturnsBinding.etProductAmout.getText().toString();
@@ -721,7 +720,15 @@ public class AddReturnsFragment extends Fragment {
                             total_price = price * Double.parseDouble(product_amount+"");
                             fragmentAddReturnsBinding.etProductPrice.setText(product_price);
                             fragmentAddReturnsBinding.etTotalPrice.setText(total_price+"");
-                        }
+                        }/*else if (fragmentAddReturnsBinding.typeSpinner.getSelectedItemPosition()==1){
+                            type_id ="2";
+                            product_price = product.getOneSellPrice();
+                            product_amount = fragmentAddReturnsBinding.etProductAmout.getText().toString();
+                            price = Double.parseDouble(product_price);
+                            total_price = price * Double.parseDouble(product_amount+"");
+                            fragmentAddReturnsBinding.etProductPrice.setText(product_price);
+                            fragmentAddReturnsBinding.etTotalPrice.setText(total_price+"");
+                        }*/
                     }
                     //citytitlelist.clear();
                 }catch (Exception e){
@@ -828,6 +835,7 @@ public class AddReturnsFragment extends Fragment {
             fatoraDetail.setProduct_discount(discount);
             fatoraDetail.setProduct_pouns(bonous);
             fatoraDetail.setNotes("");
+            fatoraDetail.setFatora_type("2");
             fatoraDetail.setTotal(total_price+"");
             databaseClass.getDao().editproduct(fatoraDetail);
             //fragmentBillsBinding.txtProductInCart.setText(fatoraDetailList.size()+"");

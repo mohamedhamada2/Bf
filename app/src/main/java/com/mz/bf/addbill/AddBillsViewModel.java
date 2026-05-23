@@ -41,7 +41,7 @@ public class AddBillsViewModel {
 
     public void getTypes() {
         typelist = new ArrayList<>();
-        typelist.add("جملة");
+        //typelist.add("جملة");
         typelist.add("قطاعي");
         billsFragment.setypespinner(typelist);
     }

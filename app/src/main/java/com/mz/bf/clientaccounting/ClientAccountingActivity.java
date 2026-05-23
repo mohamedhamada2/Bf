@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 
 import com.mz.bf.R;
 import com.mz.bf.addpayment.PaymentActivity;
+import com.mz.bf.api.CodeSharedPreferance;
 import com.mz.bf.api.MySharedPreference;
 import com.mz.bf.authentication.LoginModel;
 
@@ -21,7 +22,9 @@ public class ClientAccountingActivity extends AppCompatActivity {
     ImageView back_img;
     MySharedPreference mySharedPreference;
     LoginModel loginModel;
-    String user_id;
+    String user_id,base_url;
+    CodeSharedPreferance codeSharedPreferance;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +37,14 @@ public class ClientAccountingActivity extends AppCompatActivity {
         back_img = findViewById(R.id.back_img);
         user_id = loginModel.getId() + "";
         webView.setWebViewClient(new ClientAccountingActivity.WebViewClient());
-        webView.loadUrl("https://b.f.e.one-click.solutions/representative/Sale/client_accounting/"+user_id);
+        codeSharedPreferance = CodeSharedPreferance.getInstance();
+        if (codeSharedPreferance.Get_UserData(this) == null){
+            base_url = "https://b.f.e.one-click.solutions/";
+        }else {
+
+            base_url = codeSharedPreferance.Get_UserData(this).getRecords().getUrl();
+        }
+        webView.loadUrl(base_url+"/representative/Sale/client_accounting/"+user_id);
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);

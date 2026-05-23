@@ -46,7 +46,7 @@ public class AddReturnsViewModel {
 
     public void getTypes() {
         typelist = new ArrayList<>();
-        typelist.add("جملة");
+        //typelist.add("جملة");
         typelist.add("قطاعي");
         addReturnsFragment.setypespinner(typelist);
     }

@@ -44,6 +44,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 public class PrintSandActivity extends AppCompatActivity {
     private ActivityPrintSandBinding binding;
     private ActivityResultLauncher<String[]> permissions,permissions2;
@@ -68,7 +76,7 @@ public class PrintSandActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_print_sand);
-        binding = DataBindingUtil.setContentView(this,R.layout.activity_print_sand);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_print_sand);
         printViewModel = new PrintSandViewModel(this);
         binding.setPrintsandviewmodel(printViewModel);
         initViews();
@@ -373,5 +381,14 @@ public class PrintSandActivity extends AppCompatActivity {
         binding.txtSandDate.setText(esal.getDateAr());
         binding.txtSandNum.setText(esal.getRkmEsal());
         binding.txtValue.setText(esal.getValue());
+        if (esal.getType().equals("1")){
+            binding.txtSand.setText("سند قبض ");
+            binding.txtNowRasied.setText(esal.getNow_rasied());
+            binding.txtPreviousRasied.setText(esal.getPrevious_rasied());
+        }else{
+            binding.txtSand.setText("سند صرف");
+            binding.relative4.setVisibility(View.GONE);
+            binding.relative5.setVisibility(View.GONE);
+        }
     }
 }

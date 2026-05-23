@@ -251,64 +251,32 @@ public class BillsFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                /*try {
-                    if (charSequence.toString().equals("")){
-                        paid = 0.0;
-                        remain = totalPrice;
-                        fragmentBillsBinding.etRemain2.setText(remain+"");
-                    }else {
-                        paid = Double.parseDouble(charSequence.toString());
-                        if (price_after_discount.equals(total_price)){
-                            if (paid <= total_price){
-                                remain = totalPrice-paid;
-                                fragmentBillsBinding.etRemain2.setText(remain+"");
-                                fragmentBillsBinding.etRemain2.setError(null);
-                            }else {
-                                fragmentBillsBinding.etRemain2.setText("");
-                                Toast.makeText(getActivity(), "القيمة الدفوعة أكبر من المبلغ الاجمالي", Toast.LENGTH_SHORT).show();
-                                fragmentBillsBinding.etRemain2.setError("القيمة الدفوعة أكبر من المبلغ الاجمالي");
-                            }
-                        }else {
-                            if (paid<= price_after_discount){
-                                remain = price_after_discount-paid;
-                                fragmentBillsBinding.etRemain2.setText(remain+"");
-                                fragmentBillsBinding.etRemain2.setError(null);
-                            }else {
-                                fragmentBillsBinding.etRemain2.setText("");
-                                Toast.makeText(getActivity(), "القيمة الدفوعة أكبر من المبلغ الاجمالي", Toast.LENGTH_SHORT).show();
-                                fragmentBillsBinding.etRemain2.setError("القيمة الدفوعة أكبر من المبلغ الاجمالي");
-                            }
-                        }
-                    }
-                }catch (Exception e){
-                    paid = 0.0;
-                    remain = totalPrice;
-                    fragmentBillsBinding.etRemain2.setText(remain+"");
-                }*/
-                if (totalPrice != 0.0) {
+
                     try {
-                        if (charSequence.toString().equals("")) {
-                            totalPrice = Double.parseDouble(fragmentBillsBinding.etAllTotalPrice.getText().toString());
-                            if (fragmentBillsBinding.etDiscount.getText().toString().equals("0")){
-                                price_after_discount = totalPrice;
-                                fragmentBillsBinding.etAllTotalPrice.setText(totalPrice + "");
-                                fragmentBillsBinding.etAfterDiscount.setText(price_after_discount + "");
-                                fragmentBillsBinding.etRemain2.setText(totalPrice + "");
+                        if (totalPrice != 0.0) {
+                            if (charSequence.toString().equals("")) {
+                                totalPrice = Double.parseDouble(fragmentBillsBinding.etAllTotalPrice.getText().toString());
+                                if (fragmentBillsBinding.etDiscount.getText().toString().equals("0")) {
+                                    price_after_discount = totalPrice;
+                                    fragmentBillsBinding.etAllTotalPrice.setText(totalPrice + "");
+                                    fragmentBillsBinding.etAfterDiscount.setText(price_after_discount + "");
+                                    fragmentBillsBinding.etRemain2.setText(totalPrice + "");
+                                    fragmentBillsBinding.etPaid.setText("0");
+                                } else {
+                                    price_after_discount = totalPrice - totalPrice * Double.parseDouble(fragmentBillsBinding.etDiscount.getText().toString()) / 100;
+                                    fragmentBillsBinding.etAllTotalPrice.setText(totalPrice + "");
+                                    fragmentBillsBinding.etAfterDiscount.setText(price_after_discount + "");
+                                    fragmentBillsBinding.etRemain2.setText(price_after_discount + "");
+                                    fragmentBillsBinding.etPaid.setText("0");
+                                }
+                            } else {
                                 fragmentBillsBinding.etPaid.setText("0");
-                            }else {
-                                price_after_discount = totalPrice - totalPrice * Double.parseDouble(fragmentBillsBinding.etDiscount.getText().toString()) / 100;
+                                price_after_discount = totalPrice - totalPrice * Double.parseDouble(fragmentBillsBinding.etDiscount.getText().toString()) / 100 - Double.parseDouble(String.valueOf(charSequence));
                                 fragmentBillsBinding.etAllTotalPrice.setText(totalPrice + "");
                                 fragmentBillsBinding.etAfterDiscount.setText(price_after_discount + "");
                                 fragmentBillsBinding.etRemain2.setText(price_after_discount + "");
                                 fragmentBillsBinding.etPaid.setText("0");
                             }
-                        } else {
-                            fragmentBillsBinding.etPaid.setText("0");
-                            price_after_discount = totalPrice - totalPrice * Double.parseDouble(fragmentBillsBinding.etDiscount.getText().toString()) / 100 - Double.parseDouble(String.valueOf(charSequence));
-                            fragmentBillsBinding.etAllTotalPrice.setText(totalPrice + "");
-                            fragmentBillsBinding.etAfterDiscount.setText(price_after_discount + "");
-                            fragmentBillsBinding.etRemain2.setText(price_after_discount + "");
-                            fragmentBillsBinding.etPaid.setText("0");
                         }
                     } catch (Exception e) {
                         Log.e("exp2",e.getMessage());
@@ -319,7 +287,7 @@ public class BillsFragment extends Fragment {
                         fragmentBillsBinding.etAfterDiscount.setText(price_after_discount + "");
                         fragmentBillsBinding.etRemain2.setText(totalPrice + "");
                     }
-                }
+
             }
 
             @Override
@@ -804,10 +772,14 @@ public class BillsFragment extends Fragment {
         product_name = product.getProductCode();
         product_price="";
         fragmentBillsBinding.typeSpinner.setSelection(0);
-        type_id = "1";
+        /*type_id = "1";
         product_amount ="1";
         product_price = product.getPacketSellPrice();
-        amount_available = product.getPacketRasied();
+        amount_available = product.getPacketRasied();*/
+        type_id = "2";
+        product_amount ="1";
+        product_price = product.getOneSellPrice();
+        amount_available = product.getOneRasied();
         price = Double.parseDouble(product_price);
         total_price = price*Double.parseDouble(product_amount);
         fragmentBillsBinding.etProductPrice.setText(product_price);
@@ -819,16 +791,6 @@ public class BillsFragment extends Fragment {
                 try {
                     if (product != null){
                         if (fragmentBillsBinding.typeSpinner.getSelectedItemPosition()==0){
-                            type_id = "1";
-                            amount_available = product.getPacketRasied();
-                            product_price = product.getPacketSellPrice();
-                            product_amount = fragmentBillsBinding.etProductAmout.getText().toString();
-                            price = Double.parseDouble(product_price);
-                            total_price = price*Double.parseDouble(product_amount);
-                            fragmentBillsBinding.etProductPrice.setText(product_price);
-                            fragmentBillsBinding.etTotalPrice.setText(total_price+"");
-
-                        }else if (fragmentBillsBinding.typeSpinner.getSelectedItemPosition()==1){
                             type_id ="2";
                             amount_available = product.getOneRasied();
                             product_price = product.getOneSellPrice();
@@ -837,8 +799,19 @@ public class BillsFragment extends Fragment {
                             total_price = price * Double.parseDouble(product_amount+"");
                             fragmentBillsBinding.etProductPrice.setText(product_price);
                             fragmentBillsBinding.etTotalPrice.setText(total_price+"");
+                            /*type_id = "1";
+                            amount_available = product.getPacketRasied();
+                            product_price = product.getPacketSellPrice();
+                            product_amount = fragmentBillsBinding.etProductAmout.getText().toString();
+                            price = Double.parseDouble(product_price);
+                            total_price = price*Double.parseDouble(product_amount);
+                            fragmentBillsBinding.etProductPrice.setText(product_price);
+                            fragmentBillsBinding.etTotalPrice.setText(total_price+"");*/
 
-                        }
+                        }/*else if (fragmentBillsBinding.typeSpinner.getSelectedItemPosition()==1){
+
+
+                        }*/
                     }
                     //citytitlelist.clear();
                 }catch (Exception e){
@@ -888,12 +861,18 @@ public class BillsFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (charSequence.toString().equals("")){
+                try {
+                    if (charSequence.toString().equals("")){
+                        product_amount ="0";
+                        total_price = price*Double.parseDouble(product_amount);
+                        fragmentBillsBinding.etTotalPrice.setText(total_price+"");
+                    }else {
+                        product_amount = charSequence.toString();
+                        total_price = price*Double.parseDouble(product_amount);
+                        fragmentBillsBinding.etTotalPrice.setText(total_price+"");
+                    }
+                }catch (Exception e){
                     product_amount ="0";
-                    total_price = price*Double.parseDouble(product_amount);
-                    fragmentBillsBinding.etTotalPrice.setText(total_price+"");
-                }else {
-                    product_amount = charSequence.toString();
                     total_price = price*Double.parseDouble(product_amount);
                     fragmentBillsBinding.etTotalPrice.setText(total_price+"");
                 }
@@ -965,6 +944,7 @@ public class BillsFragment extends Fragment {
             fatoraDetail.setProduct_pouns(bonous);
             fatoraDetail.setNotes("");
             fatoraDetail.setTotal(total_price+"");
+            fatoraDetail.setFatora_type("1");
             databaseClass.getDao().editproduct(fatoraDetail);
             //fragmentBillsBinding.txtProductInCart.setText(fatoraDetailList.size()+"");
             Toast.makeText(getContext(), "تم التعديل بنجاح", Toast.LENGTH_SHORT).show();

@@ -83,6 +83,30 @@ public class Esal {
     @Expose
     private Object comment;
 
+    @SerializedName("previous_rasied")
+    @Expose
+    private String previous_rasied;
+
+    public String getPrevious_rasied() {
+        return previous_rasied;
+    }
+
+    public void setPrevious_rasied(String previous_rasied) {
+        this.previous_rasied = previous_rasied;
+    }
+
+    public String getNow_rasied() {
+        return now_rasied;
+    }
+
+    public void setNow_rasied(String now_rasied) {
+        this.now_rasied = now_rasied;
+    }
+
+    @SerializedName("now_rasied")
+    @Expose
+    private String now_rasied;
+
     public String getId() {
         return id;
     }

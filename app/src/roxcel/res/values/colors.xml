@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- purple_500 is the app's primary color (theme colorPrimary + direct usages);
+         purple_200 is colorPrimary in the night theme -->
+    <color name="purple_500">#273B63</color>
+    <color name="purple_200">#273B63</color>
+</resources>

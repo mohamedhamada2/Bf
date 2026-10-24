@@ -10,6 +10,7 @@ import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.mz.bf.BuildConfig;
 import com.mz.bf.R;
 import com.mz.bf.addpayment.PaymentActivity;
 import com.mz.bf.api.MySharedPreference;
@@ -34,7 +35,7 @@ public class ClientAccountingActivity extends AppCompatActivity {
         back_img = findViewById(R.id.back_img);
         user_id = loginModel.getId() + "";
         webView.setWebViewClient(new ClientAccountingActivity.WebViewClient());
-        webView.loadUrl("http://one-click.solutions/alastool_tex/representative/Sale/client_accounting/"+user_id);
+        webView.loadUrl(BuildConfig.BASE_URL + "representative/Sale/client_accounting/" + user_id);
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);

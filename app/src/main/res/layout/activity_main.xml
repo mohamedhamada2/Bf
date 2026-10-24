@@ -30,7 +30,7 @@
                 android:fontFamily="@font/cairo_bold"
                 android:textSize="@dimen/_16ssp"
                 android:textColor="@color/white"
-                android:text="الأسطول"
+                android:text="@string/app_name"
                 android:layout_centerInParent="true"/>
         </RelativeLayout>
 
@@ -39,18 +39,21 @@
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/_60sdp"
+        android:layout_above="@+id/frame_navigation"
         android:layout_below="@+id/relative_toolbar" />
     <FrameLayout
         android:id="@+id/frame_navigation"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_50sdp"
+        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true">
+        <!-- wrap_content: icon + label below it need their full height, and on
+             Android 15+ the view adds the system navigation bar inset as bottom padding -->
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/homeBottomnavigation"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_50sdp"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/_60sdp"
             app:menu="@menu/menu_navigation"
             app:labelVisibilityMode="labeled"
             android:background="#f0f0f0"

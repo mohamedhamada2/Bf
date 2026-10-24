@@ -1,5 +1,7 @@
 package com.mz.bf.api;
 
+import com.mz.bf.BuildConfig;
+
 
 import java.util.concurrent.TimeUnit;
 
@@ -21,7 +23,7 @@ public class RetrofitClientInstance {
                 .writeTimeout(50, TimeUnit.SECONDS).build();
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
-                    .baseUrl("https://alastool-tex.one-click.solutions/")
+                    .baseUrl(BuildConfig.BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(okHttpClient)
                     .build();

@@ -5,6 +5,8 @@ import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -16,6 +18,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.mz.bf.addclient.AddClientActivity;
@@ -56,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         setContentView(R.layout.activity_main);
         Log.e("success","success");
         homeNavigationView = findViewById(R.id.homeBottomnavigation);
+        applyStatusBarInset(findViewById(R.id.relative_toolbar));
         mySharedPreference = MySharedPreference.getInstance();
         loginModel = mySharedPreference.Get_UserData(this);
         fm.beginTransaction().add(R.id.fragment_container, homefragment, "1").hide(homefragment).commit();
@@ -97,6 +101,21 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             return true;
         }
     };
+
+    // Android 15+ (targetSdk 35+) draws edge-to-edge, so the toolbar would sit under the
+    // status bar and the menu icon would not receive clicks; grow it by the status bar height
+    private void applyStatusBarInset(View toolbar) {
+        final int baseHeight = toolbar.getLayoutParams().height;
+        ViewCompat.setOnApplyWindowInsetsListener(toolbar, (v, insets) -> {
+            int top = insets.getInsets(WindowInsetsCompat.Type.systemBars()
+                    | WindowInsetsCompat.Type.displayCutout()).top;
+            v.setPadding(v.getPaddingLeft(), top, v.getPaddingRight(), v.getPaddingBottom());
+            ViewGroup.LayoutParams lp = v.getLayoutParams();
+            lp.height = baseHeight + top;
+            v.setLayoutParams(lp);
+            return insets;
+        });
+    }
 
     public void showpopup(View view) {
         Context myContext = new ContextThemeWrapper(MainActivity.this,R.style.menuStyle);

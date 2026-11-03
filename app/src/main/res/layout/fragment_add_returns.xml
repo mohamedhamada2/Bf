@@ -91,6 +91,21 @@
                     android:textSize="@dimen/_13ssp"
                     android:padding="@dimen/_3sdp"/>
                 <EditText
+                    android:id="@+id/et_dafterRkmFatora"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_marginRight="@dimen/_10sdp"
+                    android:layout_marginLeft="@dimen/_10sdp"
+                    android:background="@drawable/txt_login_background"
+                    android:elevation="@dimen/_5sdp"
+                    android:hint="رقم فاتورة الدفتر"
+                    android:inputType="number"
+                    android:textColorHint="@color/purple_500"
+                    android:fontFamily="@font/cairo_semibold"
+                    android:textSize="@dimen/_13ssp"
+                    android:padding="@dimen/_3sdp"/>
+                <EditText
                     android:id="@+id/et_bill_date"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_40sdp"

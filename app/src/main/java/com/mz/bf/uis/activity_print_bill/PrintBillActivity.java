@@ -113,6 +113,11 @@ public class PrintBillActivity extends AppCompatActivity {
         mySharedPreference = MySharedPreference.getInstance();
         loginModel = mySharedPreference.Get_UserData(this);
         user_name = loginModel.getUserName();
+        if (getIntent().getStringExtra("id") == null) {
+            Toast.makeText(this, "تعذر تحميل الفاتورة", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
         if (flag == 1) {
             fatora_id = getIntent().getStringExtra("id");
             Log.e("love",fatora_id);

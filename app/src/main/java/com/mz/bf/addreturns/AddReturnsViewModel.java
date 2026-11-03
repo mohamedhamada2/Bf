@@ -150,11 +150,12 @@ public class AddReturnsViewModel {
         }
     }
 
-    public void add_bill(String user_id, String bill_num, String bill_date, String pay_id, String s2, String client_id, String main_branch_id, String sub_branch_id, String ware_houses_id,String price_before_discount ,Double totalPrice, String discount, String paid, String remain, String byan, List<FatoraDetail> fatoraDetailList) {
+    public void add_bill(String user_id, String bill_num, String dafter_rkm_fatora, String bill_date, String pay_id, String s2, String client_id, String main_branch_id, String sub_branch_id, String ware_houses_id,String price_before_discount ,Double totalPrice, String discount, String paid, String remain, String byan, List<FatoraDetail> fatoraDetailList) {
         Bill bill = new Bill();
         bill.setUserId(user_id);
         bill.setFatoraDate(bill_date);
         bill.setRkmFatora(bill_num);
+        bill.setDafterRkmFatora(dafter_rkm_fatora);
         bill.setTypePaid(pay_id);
         bill.setClientIdFk(client_id);
         bill.setMainBranchIdFk(main_branch_id);
@@ -179,7 +180,12 @@ public class AddReturnsViewModel {
                     if (response.isSuccessful()){
                         if (response.body().getSuccess()==1){
                             pd.dismiss();
-                            addReturnsFragment.DeleteProducts(response.body().getFatora_id());
+                            // some backends return the new bill id as "id" instead of "fatora_id"
+                            String fatoraId = response.body().getFatora_id();
+                            if (fatoraId == null) {
+                                fatoraId = response.body().getId();
+                            }
+                            addReturnsFragment.DeleteProducts(fatoraId);
                         }else {
                             pd.dismiss();
                             Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();

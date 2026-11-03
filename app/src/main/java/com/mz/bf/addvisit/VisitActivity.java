@@ -1,5 +1,6 @@
 package com.mz.bf.addvisit;
 
+import com.mz.bf.Utilities.InsetsUtils;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -31,6 +32,7 @@ public class VisitActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visit);
         activityVisitBinding = DataBindingUtil.setContentView(this,R.layout.activity_visit);
+        InsetsUtils.applyStatusBarInset(findViewById(R.id.toolbar));
         visitViewModel = new VisitViewModel(this);
         activityVisitBinding.setVisitviewmodel(visitViewModel);
         mySharedPreference = MySharedPreference.getInstance();

@@ -88,7 +88,7 @@ public interface GetDataService{
     Call<List<SpinnerModel>> get_warehouses(@Field("sub_branch_id_fk")String sub_branch_id_fk);
 
     @FormUrlEncoded
-    @POST("Api/get_products_by_car")
+    @POST("Api/get_products_by_store")
     Call<ProductModel> get_all_products(@Field("page")Integer page,@Field("user_id_fk")String user_id_fk,@Field("car_id_fk")String car_id_fk);
 
 

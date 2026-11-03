@@ -400,10 +400,10 @@ public class AddReturnsFragment extends Fragment {
         if(!TextUtils.isEmpty(client_name)&&!TextUtils.isEmpty(bill_num2)&&!TextUtils.isEmpty(bill_date)&&!fatoraDetailList.isEmpty()){
             if (fragmentAddReturnsBinding.etAfterDiscount.getText().equals("0")){
                 //Toast.makeText(getActivity(), "تم", Toast.LENGTH_SHORT).show();
-                addReturnsViewModel.add_bill(user_id,fragmentAddReturnsBinding.etBillNum.getText().toString(),bill_date,pay_id,"",client_id,main_branch_id,sub_branch_id,ware_houses_id,fragmentAddReturnsBinding.etAllTotalPrice.getText().toString(),price_after_discount,"0",paid+"",remain+"","byan",fatoraDetailList);
+                addReturnsViewModel.add_bill(user_id,fragmentAddReturnsBinding.etBillNum.getText().toString(),fragmentAddReturnsBinding.etDafterRkmFatora.getText().toString().trim(),bill_date,pay_id,"",client_id,main_branch_id,sub_branch_id,ware_houses_id,fragmentAddReturnsBinding.etAllTotalPrice.getText().toString(),price_after_discount,"0",paid+"",remain+"","byan",fatoraDetailList);
             }else {
                 //Toast.makeText(getActivity(), "تم", Toast.LENGTH_SHORT).show();
-                addReturnsViewModel.add_bill(user_id,fragmentAddReturnsBinding.etBillNum.getText().toString(),bill_date,pay_id,"",client_id,main_branch_id,sub_branch_id,ware_houses_id,fragmentAddReturnsBinding.etAllTotalPrice.getText().toString(),price_after_discount,fragmentAddReturnsBinding.etDiscount.getText().toString(),paid+"",remain+"","byan",fatoraDetailList);
+                addReturnsViewModel.add_bill(user_id,fragmentAddReturnsBinding.etBillNum.getText().toString(),fragmentAddReturnsBinding.etDafterRkmFatora.getText().toString().trim(),bill_date,pay_id,"",client_id,main_branch_id,sub_branch_id,ware_houses_id,fragmentAddReturnsBinding.etAllTotalPrice.getText().toString(),price_after_discount,fragmentAddReturnsBinding.etDiscount.getText().toString(),paid+"",remain+"","byan",fatoraDetailList);
             }
         }else {
             if (TextUtils.isEmpty(bill_num2)){
@@ -789,10 +789,27 @@ public class AddReturnsFragment extends Fragment {
         product_id = product.getId();
         product_name = product.getProductName();
         product_price="";
+        // only offer the sale types the product has a price for (جملة = packet, قطاعي = one)
+        List<String> productTypes = new ArrayList<>();
+        if (!TextUtils.isEmpty(product.getPacketSellPrice())) {
+            productTypes.add("جملة");
+        }
+        if (!TextUtils.isEmpty(product.getOneSellPrice())) {
+            productTypes.add("قطاعي");
+        }
+        if (productTypes.isEmpty()) {
+            productTypes.add("جملة");
+            productTypes.add("قطاعي");
+        }
+        setypespinner(productTypes);
         fragmentAddReturnsBinding.typeSpinner.setSelection(0);
-        type_id = "1";
+        boolean isPacket = productTypes.get(0).equals("جملة");
+        type_id = isPacket ? "1" : "2";
         product_amount ="1";
-        product_price = product.getPacketSellPrice();
+        product_price = isPacket ? product.getPacketSellPrice() : product.getOneSellPrice();
+        if (TextUtils.isEmpty(product_price)) {
+            product_price = "0";
+        }
         price = Double.parseDouble(product_price);
         total_price = price*Double.parseDouble(product_amount);
         fragmentAddReturnsBinding.etProductPrice.setText(product_price);
@@ -803,7 +820,7 @@ public class AddReturnsFragment extends Fragment {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 try {
                     if (product != null){
-                        if (fragmentAddReturnsBinding.typeSpinner.getSelectedItemPosition()==0){
+                        if (typelist.get(i).equals("جملة")){
                             type_id = "1";
                             product_price = product.getPacketSellPrice();
                             product_amount = fragmentAddReturnsBinding.etProductAmout.getText().toString();
@@ -811,7 +828,7 @@ public class AddReturnsFragment extends Fragment {
                             total_price = price*Double.parseDouble(product_amount);
                             fragmentAddReturnsBinding.etProductPrice.setText(product_price);
                             fragmentAddReturnsBinding.etTotalPrice.setText(total_price+"");
-                        }else if (fragmentAddReturnsBinding.typeSpinner.getSelectedItemPosition()==1){
+                        }else if (typelist.get(i).equals("قطاعي")){
                             type_id ="2";
                             product_price = product.getOneSellPrice();
                             product_amount = fragmentAddReturnsBinding.etProductAmout.getText().toString();

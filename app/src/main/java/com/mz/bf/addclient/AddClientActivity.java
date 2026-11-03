@@ -1,5 +1,6 @@
 package com.mz.bf.addclient;
 
+import com.mz.bf.Utilities.InsetsUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -55,6 +56,7 @@ public class AddClientActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_client);
         activityAddClientBinding = DataBindingUtil.setContentView(this,R.layout.activity_add_client);
+        InsetsUtils.applyStatusBarInset(findViewById(R.id.toolbar));
         addClientViewModel = new AddClientViewModel(this);
         activityAddClientBinding.setAddclientviewmodel(addClientViewModel);
         mySharedPreference = MySharedPreference.getInstance();

@@ -1,5 +1,6 @@
 package com.mz.bf.products;
 
+import com.mz.bf.Utilities.InsetsUtils;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -31,6 +32,7 @@ public class ProductsActivityActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_products_activity);
         activityProductsActivityBinding = DataBindingUtil.setContentView(this,R.layout.activity_products_activity);
+        InsetsUtils.applyStatusBarInset(findViewById(R.id.toolbar));
         productViewModel = new ProductViewModel(this);
         activityProductsActivityBinding.setProductsviewmodel(productViewModel);
         getSharedPreferenceData();

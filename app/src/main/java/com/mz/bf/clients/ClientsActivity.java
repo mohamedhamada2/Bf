@@ -1,5 +1,6 @@
 package com.mz.bf.clients;
 
+import com.mz.bf.Utilities.InsetsUtils;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -32,6 +33,7 @@ public class ClientsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clients);
         activityClientsBinding = DataBindingUtil.setContentView(this, R.layout.activity_clients);
+        InsetsUtils.applyStatusBarInset(findViewById(R.id.toolbar));
         clientViewModel = new ClientViewModel(this);
         activityClientsBinding.setClientsviewmodel(clientViewModel);
         mySharedPreference = MySharedPreference.getInstance();

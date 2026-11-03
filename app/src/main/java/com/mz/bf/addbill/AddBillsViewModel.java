@@ -145,13 +145,14 @@ public class AddBillsViewModel {
         }
     }
 
-    public void add_bill(String user_id, String bill_num, String bill_date, String pay_id, String s2, String client_id, String main_branch_id, String sub_branch_id, String ware_houses_id,String price_before_discount ,Double totalPrice, String discount, String paid, String remain, String byan, List<FatoraDetail> fatoraDetailList,Double lat,Double lon) {
+    public void add_bill(String user_id, String bill_num, String dafter_rkm_fatora, String bill_date, String pay_id, String s2, String client_id, String main_branch_id, String sub_branch_id, String ware_houses_id,String price_before_discount ,Double totalPrice, String discount, String paid, String remain, String byan, List<FatoraDetail> fatoraDetailList,Double lat,Double lon) {
         Log.e("latt",lat+"");
         Log.e("long",lon+"");
         Bill bill = new Bill();
         bill.setUserId(user_id);
         bill.setFatoraDate(bill_date);
         bill.setRkmFatora(bill_num);
+        bill.setDafterRkmFatora(dafter_rkm_fatora);
         bill.setTypePaid(pay_id);
         bill.setClientIdFk(client_id);
         bill.setMainBranchIdFk(main_branch_id);
@@ -178,7 +179,12 @@ public class AddBillsViewModel {
                     if (response.isSuccessful()){
                         if (response.body().getSuccess()==1){
                             pd.dismiss();
-                            billsFragment.DeleteProducts(response.body().getFatora_id());
+                            // some backends return the new bill id as "id" instead of "fatora_id"
+                            String fatoraId = response.body().getFatora_id();
+                            if (fatoraId == null) {
+                                fatoraId = response.body().getId();
+                            }
+                            billsFragment.DeleteProducts(fatoraId);
                             //Log.e("kkkk",response.body().getFatora_id());
                             //Toast.makeText(context,response.body().getFatora_id(), Toast.LENGTH_SHORT).show();
                             /*Intent intent = new Intent(context, PrintBillActivity.class);

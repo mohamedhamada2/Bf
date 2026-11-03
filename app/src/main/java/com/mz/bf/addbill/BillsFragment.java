@@ -33,6 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.mz.bf.BuildConfig;
 import com.mz.bf.MainActivity;
 import com.mz.bf.R;
 import com.mz.bf.Utilities.Utilities;
@@ -431,9 +432,9 @@ public class BillsFragment extends Fragment implements OnLocationUpdatedListener
         bill_date = fragmentBillsBinding.etBillDate.getText().toString();
         if(!TextUtils.isEmpty(client_name)&&!TextUtils.isEmpty(bill_num2)&&!TextUtils.isEmpty(bill_date)&&!fatoraDetailList.isEmpty()){
             if (fragmentBillsBinding.etAfterDiscount.getText().equals("0")){
-                addBillsViewModel.add_bill(user_id,fragmentBillsBinding.etBillNum.getText().toString(),bill_date,pay_id,"",client_id,main_branch_id,sub_branch_id,ware_houses_id,fragmentBillsBinding.etAllTotalPrice.getText().toString(),price_after_discount,"0",paid+"",remain+"","byan",fatoraDetailList,tvLatitude,tvLongitude);
+                addBillsViewModel.add_bill(user_id,fragmentBillsBinding.etBillNum.getText().toString(),fragmentBillsBinding.etDafterRkmFatora.getText().toString().trim(),bill_date,pay_id,"",client_id,main_branch_id,sub_branch_id,ware_houses_id,fragmentBillsBinding.etAllTotalPrice.getText().toString(),price_after_discount,"0",paid+"",remain+"","byan",fatoraDetailList,tvLatitude,tvLongitude);
             }else {
-                addBillsViewModel.add_bill(user_id,fragmentBillsBinding.etBillNum.getText().toString(),bill_date,pay_id,"",client_id,main_branch_id,sub_branch_id,ware_houses_id,fragmentBillsBinding.etAllTotalPrice.getText().toString(),price_after_discount,"0",paid+"",remain+"","byan",fatoraDetailList,tvLatitude,tvLongitude);
+                addBillsViewModel.add_bill(user_id,fragmentBillsBinding.etBillNum.getText().toString(),fragmentBillsBinding.etDafterRkmFatora.getText().toString().trim(),bill_date,pay_id,"",client_id,main_branch_id,sub_branch_id,ware_houses_id,fragmentBillsBinding.etAllTotalPrice.getText().toString(),price_after_discount,"0",paid+"",remain+"","byan",fatoraDetailList,tvLatitude,tvLongitude);
             }
 
         }else {
@@ -843,11 +844,28 @@ public class BillsFragment extends Fragment implements OnLocationUpdatedListener
         product_id = product.getId();
         product_name = product.getProductName();
         product_price="";
+        // only offer the sale types the product has a price for (جملة = packet, قطاعي = one)
+        List<String> productTypes = new ArrayList<>();
+        if (!TextUtils.isEmpty(product.getPacketSellPrice())) {
+            productTypes.add("جملة");
+        }
+        if (!TextUtils.isEmpty(product.getOneSellPrice())) {
+            productTypes.add("قطاعي");
+        }
+        if (productTypes.isEmpty()) {
+            productTypes.add("جملة");
+            productTypes.add("قطاعي");
+        }
+        setypespinner(productTypes);
         fragmentBillsBinding.typeSpinner.setSelection(0);
-        type_id = "1";
+        boolean isPacket = productTypes.get(0).equals("جملة");
+        type_id = isPacket ? "1" : "2";
         product_amount ="1";
-        product_price = product.getPacketSellPrice();
-        amount_available = product.getPacketRasied();
+        product_price = isPacket ? product.getPacketSellPrice() : product.getOneSellPrice();
+        amount_available = isPacket ? product.getPacketRasied() : product.getOneRasied();
+        if (TextUtils.isEmpty(product_price)) {
+            product_price = "0";
+        }
         price = Double.parseDouble(product_price);
         total_price = price*Double.parseDouble(product_amount);
         fragmentBillsBinding.etProductPrice.setText(product_price);
@@ -859,7 +877,7 @@ public class BillsFragment extends Fragment implements OnLocationUpdatedListener
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 try {
                     if (product != null){
-                        if (fragmentBillsBinding.typeSpinner.getSelectedItemPosition()==0){
+                        if (typelist.get(i).equals("جملة")){
                             type_id = "1";
                             amount_available = product.getPacketRasied();
                             product_price = product.getPacketSellPrice();
@@ -869,7 +887,7 @@ public class BillsFragment extends Fragment implements OnLocationUpdatedListener
                             fragmentBillsBinding.etProductPrice.setText(product_price);
                             fragmentBillsBinding.etTotalPrice.setText(total_price+"");
 
-                        }else if (fragmentBillsBinding.typeSpinner.getSelectedItemPosition()==1){
+                        }else if (typelist.get(i).equals("قطاعي")){
                             type_id ="2";
                             amount_available = product.getOneRasied();
                             product_price = product.getOneSellPrice();
@@ -948,9 +966,19 @@ public class BillsFragment extends Fragment implements OnLocationUpdatedListener
         fragmentBillsBinding.btnAddBill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!TextUtils.isEmpty(product_name)&&!TextUtils.isEmpty(product_amount)&&!TextUtils.isEmpty(product_price)&& amount_available >= Double.parseDouble(fragmentBillsBinding.etProductAmout.getText().toString())) {
+                String amountText = fragmentBillsBinding.etProductAmout.getText().toString().trim();
+                double amount;
+                try {
+                    amount = Double.parseDouble(amountText);
+                } catch (NumberFormatException e) {
+                    Toast.makeText(getContext(), "أكمل باقي البيانات", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                double available = amount_available != null ? amount_available : 0.0;
+                boolean overStock = isStockLimited() && available < amount;
+                if (!TextUtils.isEmpty(product_name)&&!TextUtils.isEmpty(product_amount)&&!TextUtils.isEmpty(product_price)&& !overStock) {
                     add_product();
-                }else if( amount_available<Double.parseDouble(fragmentBillsBinding.etProductAmout.getText().toString())){
+                }else if(overStock){
                     fragmentBillsBinding.etProductAmout.setError("عفوا !الكمية المتاحة: "+amount_available+"");
                     fragmentBillsBinding.etProductAmout.setText(amount_available+"");
                 }else {
@@ -1189,7 +1217,14 @@ public class BillsFragment extends Fragment implements OnLocationUpdatedListener
         btn_add_bill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if( amount_available<Double.parseDouble(fragmentBillsBinding.etProductAmout.getText().toString())) {
+                double amount;
+                try {
+                    amount = Double.parseDouble(et_product_amount.getText().toString().trim());
+                } catch (NumberFormatException e) {
+                    Toast.makeText(getContext(), "أكمل باقي البيانات", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (isStockLimited() && amount_available < amount) {
                     et_product_amount.setError("عفوا !الكمية المتاحة: " + amount_available + "");
                     et_product_amount.setText(amount_available + "");
                 }else {
@@ -1213,6 +1248,11 @@ public class BillsFragment extends Fragment implements OnLocationUpdatedListener
                 }
             }
         });
+    }
+
+    // only the Alastool flavor limits the bill quantity by the available stock
+    private boolean isStockLimited() {
+        return "alastool".equals(BuildConfig.FLAVOR);
     }
 
     public void add_client_discount(String value) {

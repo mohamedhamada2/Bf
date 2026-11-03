@@ -1,5 +1,6 @@
 package com.mz.bf.clientaccounting;
 
+import com.mz.bf.Utilities.InsetsUtils;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Bitmap;
@@ -28,6 +29,7 @@ public class ClientAccountingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_client_accounting);
+        InsetsUtils.applyStatusBarInset(findViewById(R.id.toolbar));
         mySharedPreference = MySharedPreference.getInstance();
         loginModel = mySharedPreference.Get_UserData(this);
         webView = findViewById(R.id.webview);

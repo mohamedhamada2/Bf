@@ -1,5 +1,6 @@
 package com.mz.bf.addpayment;
 
+import com.mz.bf.Utilities.InsetsUtils;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -83,6 +84,7 @@ public class PaymentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
         activityPaymentBinding = DataBindingUtil.setContentView(this,R.layout.activity_payment);
+        InsetsUtils.applyStatusBarInset(findViewById(R.id.toolbar));
         paymentViewModel = new PaymentViewModel(this);
         activityPaymentBinding.setPaymentviewmodel(paymentViewModel);
         mySharedPreference = MySharedPreference.getInstance();

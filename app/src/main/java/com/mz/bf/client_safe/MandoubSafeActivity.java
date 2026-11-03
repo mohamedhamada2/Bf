@@ -1,5 +1,6 @@
 package com.mz.bf.client_safe;
 
+import com.mz.bf.Utilities.InsetsUtils;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
@@ -35,6 +36,7 @@ public class MandoubSafeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mandoub_safe);
         activityMandoubSafeBinding = DataBindingUtil.setContentView(this,R.layout.activity_mandoub_safe);
+        InsetsUtils.applyStatusBarInset(findViewById(R.id.toolbar));
         mandoubSafeViewModel = new MandoubSafeViewModel(this);
         activityMandoubSafeBinding.setSafeviewmodel(mandoubSafeViewModel);
         mySharedPreference = MySharedPreference.getInstance();

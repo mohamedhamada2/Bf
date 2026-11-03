@@ -1,5 +1,6 @@
 package com.mz.bf.addsalary;
 
+import com.mz.bf.Utilities.InsetsUtils;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -81,6 +82,7 @@ public class AddSalaryActivity extends AppCompatActivity {
         loginModel = mySharedPreference.Get_UserData(this);
         user_id = loginModel.getId();
         activityAddSalaryBinding = DataBindingUtil.setContentView(this,R.layout.activity_add_salary);
+        InsetsUtils.applyStatusBarInset(findViewById(R.id.toolbar));
         addSalaryViewModel = new AddSalaryViewModel(this);
         activityAddSalaryBinding.setAddsalary(addSalaryViewModel);
         addSalaryViewModel.getTypes();

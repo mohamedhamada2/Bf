@@ -1,5 +1,6 @@
 package com.mz.bf.addvisit;
 
+import com.mz.bf.Utilities.InsetsUtils;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -87,6 +88,7 @@ public class AddVisitActivity extends AppCompatActivity implements OnLocationUpd
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_visit);
         activityAddVisitBinding = DataBindingUtil.setContentView(this,R.layout.activity_add_visit);
+        InsetsUtils.applyStatusBarInset(findViewById(R.id.toolbar));
         addVisitViewModel = new AddVisitViewModel(this);
         mySharedPreference = MySharedPreference.getInstance();
         locationTrack = new LocationTrack(AddVisitActivity.this);

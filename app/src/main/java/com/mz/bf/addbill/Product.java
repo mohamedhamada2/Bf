@@ -86,8 +86,9 @@ public class Product {
         this.packetSellPrice = packetSellPrice;
     }
 
+    // the API may send null stock; treat it as 0 so callers can unbox safely
     public Double getPacketRasied() {
-        return packetRasied;
+        return packetRasied != null ? packetRasied : 0.0;
     }
 
     public void setPacketRasied(Double packetRasied) {
@@ -95,7 +96,7 @@ public class Product {
     }
 
     public Double getOneRasied() {
-        return oneRasied;
+        return oneRasied != null ? oneRasied : 0.0;
     }
 
     public void setOneRasied(Double oneRasied) {

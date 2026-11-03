@@ -1,5 +1,6 @@
 package com.mz.bf.uis.activity_print_bill;
 
+import com.mz.bf.Utilities.InsetsUtils;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -26,6 +27,7 @@ public class PrintActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_print);
+        InsetsUtils.applyStatusBarInset(findViewById(R.id.toolbar));
         webView = findViewById(R.id.webview);
         progressBar = findViewById(R.id.progressBar);
         back_img = findViewById(R.id.back_img);

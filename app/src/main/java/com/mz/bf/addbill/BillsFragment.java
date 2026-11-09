@@ -344,20 +344,23 @@ public class BillsFragment extends Fragment implements OnLocationUpdatedListener
 
                 @Override
                 public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    // totalPrice is null until the first product is added
+                    double total = totalPrice != null ? totalPrice : 0.0;
+                    String text = charSequence.toString().trim();
+                    double rate;
                     try {
-                        value = fragmentBillsBinding.etDiscount.getText().toString();
-                        price_after_discount = totalPrice-(Double.parseDouble(value)/100 * totalPrice);
-                        fragmentBillsBinding.etAllTotalPrice.setText(totalPrice+"");
-                        fragmentBillsBinding.etAfterDiscount.setText(price_after_discount+"");
-                        fragmentBillsBinding.etRemain2.setText(totalPrice+"");
-                        fragmentBillsBinding.etPaid.setText("0");
-                    }catch (Exception e){
-                        value = "0.0";
-                        price_after_discount = totalPrice-Double.parseDouble(value);
-                        fragmentBillsBinding.etAllTotalPrice.setText(totalPrice+"");
-                        fragmentBillsBinding.etAfterDiscount.setText(price_after_discount+"");
-                        fragmentBillsBinding.etRemain2.setText(totalPrice+"");
+                        rate = Double.parseDouble(text);
+                        value = text;
+                    } catch (NumberFormatException e) {
+                        // empty or invalid input -> no discount
+                        rate = 0.0;
+                        value = "0";
                     }
+                    price_after_discount = applyClientDiscount(total, rate);
+                    fragmentBillsBinding.etAllTotalPrice.setText(total+"");
+                    fragmentBillsBinding.etAfterDiscount.setText(price_after_discount+"");
+                    fragmentBillsBinding.etPaid.setText("0");
+                    fragmentBillsBinding.etRemain2.setText(price_after_discount+"");
                 }
 
                 @Override
@@ -365,6 +368,35 @@ public class BillsFragment extends Fragment implements OnLocationUpdatedListener
 
                 }
             });
+
+        if (isRoxcel()) {
+            fragmentBillsBinding.etProductDiscount.setVisibility(View.VISIBLE);
+            fragmentBillsBinding.etProductPonus.setVisibility(View.VISIBLE);
+            fragmentBillsBinding.etFinalPrice.setVisibility(View.VISIBLE);
+            // the client discount (قيمة خصم العميل) is editable in Roxcel
+            fragmentBillsBinding.etDiscount.setEnabled(true);
+            fragmentBillsBinding.etDiscount.setClickable(true);
+            fragmentBillsBinding.etDiscount.setFocusable(true);
+            fragmentBillsBinding.etDiscount.setFocusableInTouchMode(true);
+            fragmentBillsBinding.etDiscount.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            // recalculate the final price whenever the total or the discount rate changes
+            TextWatcher finalPriceWatcher = new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    updateFinalPrice();
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                }
+            };
+            fragmentBillsBinding.etTotalPrice.addTextChangedListener(finalPriceWatcher);
+            fragmentBillsBinding.etProductDiscount.addTextChangedListener(finalPriceWatcher);
+        }
 
         fragmentBillsBinding.txtProductInCart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -926,6 +958,12 @@ public class BillsFragment extends Fragment implements OnLocationUpdatedListener
         }
         fragmentBillsBinding.etProductName.setText(product.getProductName());
         fragmentBillsBinding.etProductPrice.setVisibility(View.VISIBLE);
+        if (isRoxcel()) {
+            // prefill with the product's values from the API (if any); the user can change them
+            fragmentBillsBinding.etProductDiscount.setText(product.getProductDiscount() != null ? product.getProductDiscount() : "");
+            fragmentBillsBinding.etProductPonus.setText(product.getProductPonus() != null ? product.getProductPonus() : "");
+            updateFinalPrice();
+        }
         //fragmentBillsBinding.etProductPrice.setText(product_price);
         //fragmentBillsBinding.etDiscount.setText(discount);
         //fragmentBillsBinding.etProductAmout.setText(product_amount);
@@ -998,17 +1036,20 @@ public class BillsFragment extends Fragment implements OnLocationUpdatedListener
             fatoraDetail.setType(type_id);
             fatoraDetail.setAmount(product_amount);
             fatoraDetail.setSell_price(product_price);
-            fatoraDetail.setProduct_discount("0");
-            fatoraDetail.setProduct_pouns("0");
+            fatoraDetail.setProduct_discount(getProductDiscountRate());
+            fatoraDetail.setProduct_pouns(getProductPonus());
             fatoraDetail.setNotes("");
             fatoraDetail.setFatora_type("1");
-            fatoraDetail.setTotal(total_price+"");
+            fatoraDetail.setTotal(getFinalPrice()+"");
             databaseClass.getDao().Addbill(fatoraDetail);
             Toast.makeText(getContext(), "تمت الاضافة بنجاح", Toast.LENGTH_SHORT).show();
             fragmentBillsBinding.etProductName.setText("");
             fragmentBillsBinding.etProductAmout.setText("");
             fragmentBillsBinding.etProductPrice.setText("");
             fragmentBillsBinding.etTotalPrice.setText("");
+            fragmentBillsBinding.etProductDiscount.setText("");
+            fragmentBillsBinding.etProductPonus.setText("");
+            fragmentBillsBinding.etFinalPrice.setText("");
             getAllBills(fatoraDetailList);
         }catch (Exception e){
             FatoraDetail fatoraDetail = new FatoraDetail();
@@ -1017,11 +1058,11 @@ public class BillsFragment extends Fragment implements OnLocationUpdatedListener
             fatoraDetail.setType(type_id);
             fatoraDetail.setAmount(product_amount);
             fatoraDetail.setSell_price(product_price);
-            fatoraDetail.setProduct_discount("0");
-            fatoraDetail.setProduct_pouns("0");
+            fatoraDetail.setProduct_discount(getProductDiscountRate());
+            fatoraDetail.setProduct_pouns(getProductPonus());
             fatoraDetail.setNotes("");
             fatoraDetail.setFatora_type("1");
-            fatoraDetail.setTotal(total_price+"");
+            fatoraDetail.setTotal(getFinalPrice()+"");
             databaseClass.getDao().editproduct(fatoraDetail);
             //fragmentBillsBinding.txtProductInCart.setText(fatoraDetailList.size()+"");
             Toast.makeText(getContext(), "تم التعديل بنجاح", Toast.LENGTH_SHORT).show();
@@ -1029,6 +1070,9 @@ public class BillsFragment extends Fragment implements OnLocationUpdatedListener
             fragmentBillsBinding.etProductAmout.setText("");
             fragmentBillsBinding.etProductPrice.setText("");
             fragmentBillsBinding.etTotalPrice.setText("");
+            fragmentBillsBinding.etProductDiscount.setText("");
+            fragmentBillsBinding.etProductPonus.setText("");
+            fragmentBillsBinding.etFinalPrice.setText("");
 
             getAllBills(fatoraDetailList);
         }
@@ -1062,7 +1106,7 @@ public class BillsFragment extends Fragment implements OnLocationUpdatedListener
                 fragmentBillsBinding.etRemain2.setText(totalPrice+"");
             }else {
                 fragmentBillsBinding.etDiscount.setText(value);
-                price_after_discount = totalPrice - (Double.parseDouble(fragmentBillsBinding.etDiscount.getText().toString())/100 * totalPrice);
+                price_after_discount = applyClientDiscount(totalPrice, Double.parseDouble(fragmentBillsBinding.etDiscount.getText().toString()));
                 fragmentBillsBinding.etAllTotalPrice.setText(totalPrice+"");
                 fragmentBillsBinding.etAfterDiscount.setText(price_after_discount+"");
                 fragmentBillsBinding.etRemain2.setText(price_after_discount+"");
@@ -1228,19 +1272,35 @@ public class BillsFragment extends Fragment implements OnLocationUpdatedListener
                     et_product_amount.setError("عفوا !الكمية المتاحة: " + amount_available + "");
                     et_product_amount.setText(amount_available + "");
                 }else {
-                    FatoraDetail fatoraDetail = new FatoraDetail();
-                    fatoraDetail.setProduct_id_fk(product_id);
-                    fatoraDetail.setProduct_name(product_name);
-                    fatoraDetail.setType(type_id);
-                    fatoraDetail.setAmount(et_product_amount.getText().toString());
-                    fatoraDetail.setSell_price(et_product_price.getText().toString());
-                    fatoraDetail.setProduct_discount("0");
-                    fatoraDetail.setProduct_pouns("0");
-                    fatoraDetail.setFatora_type("1");
-                    fatoraDetail.setNotes("");
-                    fatoraDetail.setTotal(et_product_total_price.getText().toString());
+                    FatoraDetail editedDetail = new FatoraDetail();
+                    editedDetail.setProduct_id_fk(product_id);
+                    editedDetail.setProduct_name(product_name);
+                    editedDetail.setType(type_id);
+                    editedDetail.setAmount(et_product_amount.getText().toString());
+                    editedDetail.setSell_price(et_product_price.getText().toString());
+                    editedDetail.setFatora_type("1");
+                    editedDetail.setNotes("");
+                    if (isRoxcel()) {
+                        // keep the product's discount rate / bonus and re-apply the discount to the new total
+                        String rate = fatoraDetail.getProduct_discount();
+                        double rateValue;
+                        try {
+                            rateValue = Double.parseDouble(rate);
+                        } catch (Exception e) {
+                            rate = "0";
+                            rateValue = 0.0;
+                        }
+                        double newTotal = price * amount;
+                        editedDetail.setProduct_discount(rate);
+                        editedDetail.setProduct_pouns(fatoraDetail.getProduct_pouns());
+                        editedDetail.setTotal((newTotal - (newTotal * rateValue / 100)) + "");
+                    } else {
+                        editedDetail.setProduct_discount("0");
+                        editedDetail.setProduct_pouns("0");
+                        editedDetail.setTotal(et_product_total_price.getText().toString());
+                    }
                     databaseClass.getDao().DeleteProduct(Integer.parseInt(product_id));
-                    databaseClass.getDao().Addbill(fatoraDetail);
+                    databaseClass.getDao().Addbill(editedDetail);
                     //fragmentBillsBinding.txtProductInCart.setText(fatoraDetailList.size()+"");
                     Toast.makeText(getContext(), "تم التعديل بنجاح", Toast.LENGTH_SHORT).show();
                     dialog2.dismiss();
@@ -1248,6 +1308,51 @@ public class BillsFragment extends Fragment implements OnLocationUpdatedListener
                 }
             }
         });
+    }
+
+    private boolean isRoxcel() {
+        return "roxcel".equals(BuildConfig.FLAVOR);
+    }
+
+    // Roxcel: discount rate (%) entered for the current product, "0" when empty/invalid
+    private String getProductDiscountRate() {
+        if (!isRoxcel()) return "0";
+        String rate = fragmentBillsBinding.etProductDiscount.getText().toString().trim();
+        try {
+            Double.parseDouble(rate);
+            return rate;
+        } catch (NumberFormatException e) {
+            return "0";
+        }
+    }
+
+    private String getProductPonus() {
+        if (!isRoxcel()) return "0";
+        String ponus = fragmentBillsBinding.etProductPonus.getText().toString().trim();
+        return TextUtils.isEmpty(ponus) ? "0" : ponus;
+    }
+
+    // final price = total - (total * discount rate / 100); equals the total when no discount is entered
+    private double getFinalPrice() {
+        double total = total_price != null ? total_price : 0.0;
+        double rate = Double.parseDouble(getProductDiscountRate());
+        return total - (total * rate / 100);
+    }
+
+    // client discount: Roxcel sends a fixed amount, the other flavours a percentage
+    private double applyClientDiscount(double total, double discount) {
+        if (isRoxcel()) {
+            return total - discount;
+        }
+        return total - (discount / 100 * total);
+    }
+
+    private void updateFinalPrice() {
+        if (TextUtils.isEmpty(fragmentBillsBinding.etTotalPrice.getText().toString())) {
+            fragmentBillsBinding.etFinalPrice.setText("");
+        } else {
+            fragmentBillsBinding.etFinalPrice.setText(getFinalPrice() + "");
+        }
     }
 
     // only the Alastool flavor limits the bill quantity by the available stock
@@ -1271,7 +1376,7 @@ public class BillsFragment extends Fragment implements OnLocationUpdatedListener
                 }else {
                     fragmentBillsBinding.etPaid.setText("0");
                     fragmentBillsBinding.etDiscount.setText(value);
-                    price_after_discount = totalPrice-totalPrice*Double.parseDouble(value)/100;
+                    price_after_discount = applyClientDiscount(totalPrice, Double.parseDouble(value));
                     fragmentBillsBinding.etAllTotalPrice.setText(totalPrice+"");
                     fragmentBillsBinding.etAfterDiscount.setText(price_after_discount+"");
                     fragmentBillsBinding.etRemain2.setText(price_after_discount+"");

@@ -37,6 +37,29 @@ public class Product {
     @SerializedName("store_amount_hadback")
     @Expose
     private Integer storeAmountHadback;
+    // Roxcel: per-product discount rate (%) and bonus
+    @SerializedName("product_discount")
+    @Expose
+    private String productDiscount;
+    @SerializedName("product_ponus")
+    @Expose
+    private String productPonus;
+
+    public String getProductDiscount() {
+        return productDiscount;
+    }
+
+    public void setProductDiscount(String productDiscount) {
+        this.productDiscount = productDiscount;
+    }
+
+    public String getProductPonus() {
+        return productPonus;
+    }
+
+    public void setProductPonus(String productPonus) {
+        this.productPonus = productPonus;
+    }
 
     public String getSum() {
         return sum;

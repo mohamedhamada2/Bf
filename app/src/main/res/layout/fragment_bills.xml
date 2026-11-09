@@ -289,6 +289,46 @@
                                 android:padding="@dimen/_3sdp"
                                 android:inputType="numberDecimal"/>
 
+                            <!-- Roxcel only: per-product discount rate (%) and bonus -->
+                            <EditText
+                                android:id="@+id/et_product_discount"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/_40sdp"
+                                android:background="@drawable/txt_login_background"
+                                android:layout_marginTop="@dimen/_5sdp"
+                                android:layout_marginRight="@dimen/_10sdp"
+                                android:layout_marginLeft="@dimen/_10sdp"
+                                android:elevation="@dimen/_5sdp"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:hint="نسبة الخصم %"
+                                android:textSize="@dimen/_14ssp"
+                                android:textColor="@color/purple_500"
+                                android:textColorHint="@color/purple_500"
+                                android:gravity="center_vertical"
+                                android:fontFamily="@font/cairo_semibold"
+                                android:padding="@dimen/_3sdp"
+                                android:inputType="numberDecimal"
+                                android:visibility="gone"/>
+                            <EditText
+                                android:id="@+id/et_product_ponus"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/_40sdp"
+                                android:background="@drawable/txt_login_background"
+                                android:layout_marginTop="@dimen/_5sdp"
+                                android:layout_marginRight="@dimen/_10sdp"
+                                android:layout_marginLeft="@dimen/_10sdp"
+                                android:elevation="@dimen/_5sdp"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:hint="البونص"
+                                android:textSize="@dimen/_14ssp"
+                                android:textColor="@color/purple_500"
+                                android:textColorHint="@color/purple_500"
+                                android:gravity="center_vertical"
+                                android:fontFamily="@font/cairo_semibold"
+                                android:padding="@dimen/_3sdp"
+                                android:inputType="numberDecimal"
+                                android:visibility="gone"/>
+
                             <EditText
                                 android:id="@+id/et_total_price"
                                 android:layout_width="match_parent"
@@ -310,6 +350,28 @@
                                 android:focusable="false"
                                 android:editable="false"
                                 android:enabled="false"/>
+                            <!-- Roxcel only: total price after the product discount -->
+                            <EditText
+                                android:id="@+id/et_final_price"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/_40sdp"
+                                android:background="@drawable/txt_login_background"
+                                android:layout_marginTop="@dimen/_10sdp"
+                                android:layout_marginRight="@dimen/_10sdp"
+                                android:layout_marginLeft="@dimen/_10sdp"
+                                android:elevation="@dimen/_5sdp"
+                                android:hint="السعر النهائي"
+                                android:textSize="@dimen/_14ssp"
+                                android:textColor="@color/purple_500"
+                                android:textColorHint="@color/purple_500"
+                                android:gravity="center_vertical"
+                                android:fontFamily="@font/cairo_semibold"
+                                android:padding="@dimen/_3sdp"
+                                android:inputType="numberDecimal"
+                                android:clickable="false"
+                                android:focusable="false"
+                                android:enabled="false"
+                                android:visibility="gone"/>
                             <Button
                                 android:id="@+id/btn_add_bill"
                                 android:layout_width="match_parent"

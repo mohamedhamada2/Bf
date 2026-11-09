@@ -29,6 +29,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mz.bf.BuildConfig;
 import com.mz.bf.MainActivity;
 import com.mz.bf.MainActivity2;
 import com.mz.bf.R;
@@ -310,6 +311,26 @@ public class AddReturnsFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (isRoxcel()) {
+                    // Roxcel: the client discount is an amount the user can edit
+                    double total = totalPrice != null ? totalPrice : 0.0;
+                    String text = charSequence.toString().trim();
+                    double amount;
+                    try {
+                        amount = Double.parseDouble(text);
+                        value = text;
+                    } catch (NumberFormatException e) {
+                        // empty or invalid input -> no discount
+                        amount = 0.0;
+                        value = "0";
+                    }
+                    price_after_discount = applyClientDiscount(total, amount);
+                    fragmentAddReturnsBinding.etAllTotalPrice.setText(total+"");
+                    fragmentAddReturnsBinding.etAfterDiscount.setText(price_after_discount+"");
+                    fragmentAddReturnsBinding.etPaid.setText("0");
+                    fragmentAddReturnsBinding.etRemain2.setText(price_after_discount+"");
+                    return;
+                }
                 try {
                     value = fragmentAddReturnsBinding.etDiscount.getText().toString();
                     price_after_discount = totalPrice-Double.parseDouble(value);
@@ -331,6 +352,34 @@ public class AddReturnsFragment extends Fragment {
 
             }
         });
+        if (isRoxcel()) {
+            fragmentAddReturnsBinding.etProductDiscount.setVisibility(View.VISIBLE);
+            fragmentAddReturnsBinding.etProductPonus.setVisibility(View.VISIBLE);
+            fragmentAddReturnsBinding.etFinalPrice.setVisibility(View.VISIBLE);
+            // the client discount (قيمة خصم العميل) is editable in Roxcel
+            fragmentAddReturnsBinding.etDiscount.setEnabled(true);
+            fragmentAddReturnsBinding.etDiscount.setClickable(true);
+            fragmentAddReturnsBinding.etDiscount.setFocusable(true);
+            fragmentAddReturnsBinding.etDiscount.setFocusableInTouchMode(true);
+            fragmentAddReturnsBinding.etDiscount.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            // recalculate the final price whenever the total or the discount rate changes
+            TextWatcher finalPriceWatcher = new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    updateFinalPrice();
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                }
+            };
+            fragmentAddReturnsBinding.etTotalPrice.addTextChangedListener(finalPriceWatcher);
+            fragmentAddReturnsBinding.etProductDiscount.addTextChangedListener(finalPriceWatcher);
+        }
         fragmentAddReturnsBinding.txtProductInCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -867,6 +916,12 @@ public class AddReturnsFragment extends Fragment {
         }
         fragmentAddReturnsBinding.etProductName.setText(product.getProductName());
         fragmentAddReturnsBinding.etProductPrice.setVisibility(View.VISIBLE);
+        if (isRoxcel()) {
+            // prefill with the product's values from the API (if any); the user can change them
+            fragmentAddReturnsBinding.etProductDiscount.setText(product.getProductDiscount() != null ? product.getProductDiscount() : "");
+            fragmentAddReturnsBinding.etProductPonus.setText(product.getProductPonus() != null ? product.getProductPonus() : "");
+            updateFinalPrice();
+        }
         //fragmentAddReturnsBinding.etProductPrice.setText(product.getOneSellPrice());
         //fragmentBillsBinding.etDiscount.setText(discount);
         //fragmentBillsBinding.etProductAmout.setText(product_amount);
@@ -923,17 +978,20 @@ public class AddReturnsFragment extends Fragment {
             fatoraDetail.setType(type_id);
             fatoraDetail.setAmount(product_amount);
             fatoraDetail.setSell_price(product_price);
-            fatoraDetail.setProduct_discount("0");
-            fatoraDetail.setProduct_pouns("0");
+            fatoraDetail.setProduct_discount(getProductDiscountRate());
+            fatoraDetail.setProduct_pouns(getProductPonus());
             fatoraDetail.setNotes("");
             fatoraDetail.setFatora_type("2");
-            fatoraDetail.setTotal(total_price+"");
+            fatoraDetail.setTotal(getFinalPrice()+"");
             databaseClass.getDao().Addbill(fatoraDetail);
             Toast.makeText(getContext(), "تمت الاضافة بنجاح", Toast.LENGTH_SHORT).show();
             fragmentAddReturnsBinding.etProductName.setText("");
             fragmentAddReturnsBinding.etProductAmout.setText("");
             fragmentAddReturnsBinding.etProductPrice.setText("");
             fragmentAddReturnsBinding.etTotalPrice.setText("");
+            fragmentAddReturnsBinding.etProductDiscount.setText("");
+            fragmentAddReturnsBinding.etProductPonus.setText("");
+            fragmentAddReturnsBinding.etFinalPrice.setText("");
             getAllBills();
         }catch (Exception e){
             FatoraDetail fatoraDetail = new FatoraDetail();
@@ -942,10 +1000,10 @@ public class AddReturnsFragment extends Fragment {
             fatoraDetail.setType(type_id);
             fatoraDetail.setAmount(product_amount);
             fatoraDetail.setSell_price(product_price);
-            fatoraDetail.setProduct_discount("0");
-            fatoraDetail.setProduct_pouns("0");
+            fatoraDetail.setProduct_discount(getProductDiscountRate());
+            fatoraDetail.setProduct_pouns(getProductPonus());
             fatoraDetail.setNotes("");
-            fatoraDetail.setTotal(total_price+"");
+            fatoraDetail.setTotal(getFinalPrice()+"");
             fatoraDetail.setFatora_type("2");
             databaseClass.getDao().editproduct(fatoraDetail);
             //fragmentBillsBinding.txtProductInCart.setText(fatoraDetailList.size()+"");
@@ -954,6 +1012,9 @@ public class AddReturnsFragment extends Fragment {
             fragmentAddReturnsBinding.etProductAmout.setText("");
             fragmentAddReturnsBinding.etProductPrice.setText("");
             fragmentAddReturnsBinding.etTotalPrice.setText("");
+            fragmentAddReturnsBinding.etProductDiscount.setText("");
+            fragmentAddReturnsBinding.etProductPonus.setText("");
+            fragmentAddReturnsBinding.etFinalPrice.setText("");
             getAllBills();
         }
     }
@@ -998,7 +1059,7 @@ public class AddReturnsFragment extends Fragment {
                     fragmentAddReturnsBinding.etRemain2.setText(totalPrice+"");
                 }else {
                     fragmentAddReturnsBinding.etDiscount.setText(value);
-                    price_after_discount = totalPrice-totalPrice*Double.parseDouble(value)/100;
+                    price_after_discount = applyClientDiscount(totalPrice, Double.parseDouble(value));
                     fragmentAddReturnsBinding.etAllTotalPrice.setText(totalPrice+"");
                     fragmentAddReturnsBinding.etAfterDiscount.setText(price_after_discount+"");
                     fragmentAddReturnsBinding.etRemain2.setText(price_after_discount+"");
@@ -1150,25 +1211,86 @@ public class AddReturnsFragment extends Fragment {
         btn_add_bill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FatoraDetail fatoraDetail = new FatoraDetail();
-                fatoraDetail.setProduct_id_fk(product_id);
-                fatoraDetail.setProduct_name(product_name);
-                fatoraDetail.setType(type_id);
-                fatoraDetail.setAmount(et_product_amount.getText().toString());
-                fatoraDetail.setSell_price(et_product_price.getText().toString());
-                fatoraDetail.setProduct_discount("0");
-                fatoraDetail.setProduct_pouns("0");
-                fatoraDetail.setFatora_type("2");
-                fatoraDetail.setNotes("");
-                fatoraDetail.setTotal(et_product_total_price.getText().toString());
+                FatoraDetail editedDetail = new FatoraDetail();
+                editedDetail.setProduct_id_fk(product_id);
+                editedDetail.setProduct_name(product_name);
+                editedDetail.setType(type_id);
+                editedDetail.setAmount(et_product_amount.getText().toString());
+                editedDetail.setSell_price(et_product_price.getText().toString());
+                editedDetail.setFatora_type("2");
+                editedDetail.setNotes("");
+                if (isRoxcel()) {
+                    // keep the product's discount rate / bonus and re-apply the discount to the new total
+                    String rate = fatoraDetail.getProduct_discount();
+                    double rateValue;
+                    try {
+                        rateValue = Double.parseDouble(rate);
+                    } catch (Exception e) {
+                        rate = "0";
+                        rateValue = 0.0;
+                    }
+                    double newTotal = total_price != null ? total_price : 0.0;
+                    editedDetail.setProduct_discount(rate);
+                    editedDetail.setProduct_pouns(fatoraDetail.getProduct_pouns());
+                    editedDetail.setTotal((newTotal - (newTotal * rateValue / 100)) + "");
+                } else {
+                    editedDetail.setProduct_discount("0");
+                    editedDetail.setProduct_pouns("0");
+                    editedDetail.setTotal(et_product_total_price.getText().toString());
+                }
                 databaseClass.getDao().DeleteProduct(Integer.parseInt(product_id));
-                databaseClass.getDao().Addbill(fatoraDetail);
+                databaseClass.getDao().Addbill(editedDetail);
                 //fragmentBillsBinding.txtProductInCart.setText(fatoraDetailList.size()+"");
                 Toast.makeText(getContext(), "تم التعديل بنجاح", Toast.LENGTH_SHORT).show();
                 dialog2.dismiss();
                 getAllBills();
             }
         });
+    }
+
+    private boolean isRoxcel() {
+        return "roxcel".equals(BuildConfig.FLAVOR);
+    }
+
+    // Roxcel: discount rate (%) entered for the current product, "0" when empty/invalid
+    private String getProductDiscountRate() {
+        if (!isRoxcel()) return "0";
+        String rate = fragmentAddReturnsBinding.etProductDiscount.getText().toString().trim();
+        try {
+            Double.parseDouble(rate);
+            return rate;
+        } catch (NumberFormatException e) {
+            return "0";
+        }
+    }
+
+    private String getProductPonus() {
+        if (!isRoxcel()) return "0";
+        String ponus = fragmentAddReturnsBinding.etProductPonus.getText().toString().trim();
+        return TextUtils.isEmpty(ponus) ? "0" : ponus;
+    }
+
+    // final price = total - (total * discount rate / 100); equals the total when no discount is entered
+    private double getFinalPrice() {
+        double total = total_price != null ? total_price : 0.0;
+        double rate = Double.parseDouble(getProductDiscountRate());
+        return total - (total * rate / 100);
+    }
+
+    private void updateFinalPrice() {
+        if (TextUtils.isEmpty(fragmentAddReturnsBinding.etTotalPrice.getText().toString())) {
+            fragmentAddReturnsBinding.etFinalPrice.setText("");
+        } else {
+            fragmentAddReturnsBinding.etFinalPrice.setText(getFinalPrice() + "");
+        }
+    }
+
+    // client discount: Roxcel uses a fixed amount, the other flavours a percentage
+    private double applyClientDiscount(double total, double discount) {
+        if (isRoxcel()) {
+            return total - discount;
+        }
+        return total - (discount / 100 * total);
     }
 
     public void add_client_discount(String value) {
@@ -1185,7 +1307,7 @@ public class AddReturnsFragment extends Fragment {
                     fragmentAddReturnsBinding.etRemain2.setText(totalPrice+"");
                 }else {
                     fragmentAddReturnsBinding.etDiscount.setText(value);
-                    price_after_discount = totalPrice-totalPrice*Double.parseDouble(value)/100;
+                    price_after_discount = applyClientDiscount(totalPrice, Double.parseDouble(value));
                     fragmentAddReturnsBinding.etAllTotalPrice.setText(totalPrice+"");
                     fragmentAddReturnsBinding.etAfterDiscount.setText(price_after_discount+"");
                     fragmentAddReturnsBinding.etRemain2.setText(price_after_discount+"");

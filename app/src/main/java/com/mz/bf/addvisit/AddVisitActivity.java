@@ -67,7 +67,7 @@ import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
-public class AddVisitActivity extends AppCompatActivity implements OnLocationUpdatedListener  {
+public class AddVisitActivity extends AppCompatActivity implements OnLocationUpdatedListener, ClientAdapter.OnClientSelectedListener, AddVisitViewModel.OnVisitAddedListener {
     ActivityAddVisitBinding activityAddVisitBinding;
     AddVisitViewModel addVisitViewModel;
     MySharedPreference mySharedPreference;
@@ -89,7 +89,7 @@ public class AddVisitActivity extends AppCompatActivity implements OnLocationUpd
         setContentView(R.layout.activity_add_visit);
         activityAddVisitBinding = DataBindingUtil.setContentView(this,R.layout.activity_add_visit);
         InsetsUtils.applyStatusBarInset(findViewById(R.id.toolbar));
-        addVisitViewModel = new AddVisitViewModel(this);
+        addVisitViewModel = new AddVisitViewModel(this, this);
         mySharedPreference = MySharedPreference.getInstance();
         locationTrack = new LocationTrack(AddVisitActivity.this);
         loginModel = mySharedPreference.Get_UserData(this);
@@ -158,7 +158,7 @@ public class AddVisitActivity extends AppCompatActivity implements OnLocationUpd
                 @Override
                 public void onResponse(Call<ClientModel> call, Response<ClientModel> response) {
                     if (response.isSuccessful()) {
-                        clientAdapter = new ClientAdapter(response.body().getClients(), AddVisitActivity.this);
+                        clientAdapter = new ClientAdapter(response.body().getClients(), AddVisitActivity.this, AddVisitActivity.this);
                         layoutManager3 = new LinearLayoutManager(AddVisitActivity.this);
                         clients_recycler.setLayoutManager(layoutManager3);
                         clients_recycler.setAdapter(clientAdapter);
@@ -187,7 +187,7 @@ public class AddVisitActivity extends AppCompatActivity implements OnLocationUpd
                             @Override
                             public void onResponse(Call<ClientModel> call, Response<ClientModel> response) {
                                 if (response.isSuccessful()) {
-                                    clientAdapter = new ClientAdapter(response.body().getClients(), AddVisitActivity.this);
+                                    clientAdapter = new ClientAdapter(response.body().getClients(), AddVisitActivity.this, AddVisitActivity.this);
                                     layoutManager3 = new LinearLayoutManager(AddVisitActivity.this);
                                     clients_recycler.setLayoutManager(layoutManager3);
                                     clients_recycler.setAdapter(clientAdapter);
@@ -209,7 +209,7 @@ public class AddVisitActivity extends AppCompatActivity implements OnLocationUpd
                             @Override
                             public void onResponse(Call<ClientModel> call, Response<ClientModel> response) {
                                 if (response.isSuccessful()) {
-                                    clientAdapter = new ClientAdapter(response.body().getClients(), AddVisitActivity.this);
+                                    clientAdapter = new ClientAdapter(response.body().getClients(), AddVisitActivity.this, AddVisitActivity.this);
                                     layoutManager3 = new LinearLayoutManager(AddVisitActivity.this);
                                     clients_recycler.setLayoutManager(layoutManager3);
                                     clients_recycler.setAdapter(clientAdapter);
@@ -294,6 +294,13 @@ public class AddVisitActivity extends AppCompatActivity implements OnLocationUpd
         }
     }
 
+    @Override
+    public void onVisitAdded() {
+        startActivity(new Intent(this, VisitActivity.class));
+        finish();
+    }
+
+    @Override
     public void setClientData(Client client) {
         client_id = client.getClientIdFk();
         activityAddVisitBinding.etClientName.setText(client.getClientName());

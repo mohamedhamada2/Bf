@@ -16,7 +16,7 @@ import com.mz.bf.api.MySharedPreference;
 import com.mz.bf.authentication.LoginModel;
 import com.mz.bf.databinding.ActivityVisitBinding;
 
-public class VisitActivity extends AppCompatActivity {
+public class VisitActivity extends AppCompatActivity implements VisitViewModel.VisitsView {
     ActivityVisitBinding activityVisitBinding;
     VisitViewModel visitViewModel;
     MySharedPreference mySharedPreference;
@@ -33,7 +33,7 @@ public class VisitActivity extends AppCompatActivity {
         setContentView(R.layout.activity_visit);
         activityVisitBinding = DataBindingUtil.setContentView(this,R.layout.activity_visit);
         InsetsUtils.applyStatusBarInset(findViewById(R.id.toolbar));
-        visitViewModel = new VisitViewModel(this);
+        visitViewModel = new VisitViewModel(this, this);
         activityVisitBinding.setVisitviewmodel(visitViewModel);
         mySharedPreference = MySharedPreference.getInstance();
         loginModel = mySharedPreference.Get_UserData(this);
@@ -69,6 +69,7 @@ public class VisitActivity extends AppCompatActivity {
         });
     }
 
+    @Override
     public void init_sand(VisitAdapter sandsAdapter) {
         activityVisitBinding.visitsRecycler.setAdapter(sandsAdapter);
         layoutManager = new LinearLayoutManager(this);

@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 import com.mz.bf.R;
 import com.mz.bf.addbill.Client;
-import com.mz.bf.addsalary.AddSalaryActivity;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -20,12 +19,16 @@ import androidx.recyclerview.widget.RecyclerView;
 public class ClientAdapter extends RecyclerView.Adapter<ClientAdapter.ClientHolder> {
     List<Client> clientList;
     Context context;
-    AddVisitActivity addSalaryActivity;
+    OnClientSelectedListener listener;
 
-    public ClientAdapter(List<Client> clientList, Context context) {
+    public interface OnClientSelectedListener {
+        void setClientData(Client client);
+    }
+
+    public ClientAdapter(List<Client> clientList, Context context, OnClientSelectedListener listener) {
         this.clientList = clientList;
         this.context = context;
-        addSalaryActivity = (AddVisitActivity) context;
+        this.listener = listener;
 
     }
 
@@ -43,7 +46,7 @@ public class ClientAdapter extends RecyclerView.Adapter<ClientAdapter.ClientHold
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addSalaryActivity.setClientData(clientList.get(position));
+                listener.setClientData(clientList.get(position));
             }
         });
     }

@@ -23,6 +23,8 @@ import com.mz.bf.addpayment.PaymentActivity;
 import com.mz.bf.addreturns.AddReturnsFragment;
 import com.mz.bf.addsalary.AddSalaryActivity;
 import com.mz.bf.addvisit.AddVisitActivity;
+import com.mz.bf.addvisit.AddVisitFragment;
+import com.mz.bf.addvisit.VisitsFragment;
 import com.mz.bf.addvisit.VisitActivity;
 import com.mz.bf.Utilities.InsetsUtils;
 import com.mz.bf.api.MySharedPreference;
@@ -39,7 +41,7 @@ import com.mz.bf.profile.ProfileActivity;
 import com.mz.bf.returns.ReturnsFragment;
 import com.mz.bf.withoutdiscountbill.WithoutDiscountFragment;
 
-public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
+public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener, AddVisitFragment.Host {
 
     BottomNavigationView homeNavigationView;
     MySharedPreference mySharedPreference;
@@ -60,6 +62,10 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         InsetsUtils.applyStatusBarInset(findViewById(R.id.relative_toolbar));
         mySharedPreference = MySharedPreference.getInstance();
         loginModel = mySharedPreference.Get_UserData(this);
+        if (BuildConfig.VISITS_ONLY) {
+            setupVisitsNavigation();
+            return;
+        }
         fm.beginTransaction().add(R.id.fragment_container, homefragment, "1").hide(homefragment).commit();
         fm.beginTransaction().add(R.id.fragment_container, discountbillFragment, "2").hide(discountbillFragment).commit();
         fm.beginTransaction().add(R.id.fragment_container, withoutDiscountFragment, "3").hide(withoutDiscountFragment).commit();
@@ -71,6 +77,27 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         homeNavigationView.setSelectedItemId(R.id.bills_of_month);
 
     }
+    // Visits-only flavours (e.g. modernTechnology): two tabs, "add visit" and "visits"
+    private final Fragment visitsFragment = new VisitsFragment();
+    private final Fragment addVisitFragment = new AddVisitFragment();
+
+    private void setupVisitsNavigation() {
+        homeNavigationView.getMenu().clear();
+        homeNavigationView.inflateMenu(R.menu.menu_navigation_visits);
+        homeNavigationView.setOnNavigationItemSelectedListener(item -> {
+            Fragment target = item.getItemId() == R.id.nav_visits ? visitsFragment : addVisitFragment;
+            fm.beginTransaction().replace(R.id.fragment_container, target).commit();
+            active = target;
+            return true;
+        });
+        homeNavigationView.setSelectedItemId(R.id.nav_add_visit);
+    }
+
+    @Override
+    public void showVisits() {
+        homeNavigationView.setSelectedItemId(R.id.nav_visits);
+    }
+
     private BottomNavigationView.OnNavigationItemSelectedListener nav_listner = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(MenuItem item) {
@@ -104,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         Context myContext = new ContextThemeWrapper(MainActivity.this,R.style.menuStyle);
         android.widget.PopupMenu menu = new android.widget.PopupMenu(myContext, view);
         menu.setOnMenuItemClickListener(this::onMenuItemClick);
-        menu.inflate(R.menu.main_menu);
+        menu.inflate(BuildConfig.VISITS_ONLY ? R.menu.main_menu_visits : R.menu.main_menu);
         menu.show();
     }
 
@@ -150,4 +177,4 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         return true;
     }
 
-}
+}

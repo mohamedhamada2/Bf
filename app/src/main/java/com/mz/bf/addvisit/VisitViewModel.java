@@ -17,12 +17,16 @@ import retrofit2.Response;
 
 public class VisitViewModel {
     Context context;
-    VisitActivity visitActivity;
+    VisitsView visitActivity;
     List<Visit> visitList;
     VisitAdapter visitAdapter;
-    public VisitViewModel(Context context) {
+    public interface VisitsView {
+        void init_sand(VisitAdapter visitAdapter);
+    }
+
+    public VisitViewModel(Context context, VisitsView view) {
         this.context = context;
-        this.visitActivity = (VisitActivity) context;
+        this.visitActivity = view;
     }
 
     public void get_all_visits(String user_id, int i) {

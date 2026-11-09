@@ -14,6 +14,7 @@ android {
         versionCode 47
         versionName "5.6"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "boolean", "VISITS_ONLY", "false"
     }
 
     flavorDimensions = ["client"]
@@ -28,6 +29,13 @@ android {
             applicationId "com.mz.rolex"
             // Retrofit needs the trailing slash
             buildConfigField "String", "BASE_URL", '"https://roxcelegypt-project.one-click.solutions/"'
+        }
+        modernTechnology {
+            dimension "client"
+            applicationId "com.mz.modern_technology"
+            buildConfigField "String", "BASE_URL", '"https://visits.one-click.solutions/"'
+            // main screen shows only "add visit" and "visits" tabs
+            buildConfigField "boolean", "VISITS_ONLY", "true"
         }
     }
 

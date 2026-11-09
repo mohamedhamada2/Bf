@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/bf_cover"
+    tools:context=".addvisit.AddVisitFragment">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/_14ssp"
+        android:text="ملاحظة سيتم تحديد موقعك للتأكد من الزيارة"
+        android:layout_gravity="center"
+        android:fontFamily="@font/cairo_bold"
+        android:layout_margin="@dimen/_10sdp"
+        android:textColor="@color/black"/>
+    <EditText
+        android:id="@+id/et_client_name"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginRight="@dimen/_10sdp"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:background="@drawable/txt_login_background"
+        android:elevation="@dimen/_5sdp"
+        android:clickable="true"
+        android:focusable="false"
+        android:hint="إسم العميل"
+        android:inputType="text"
+        android:textColorHint="@color/purple_500"
+        android:fontFamily="@font/cairo_semibold"
+        android:textSize="@dimen/_13ssp"
+        android:padding="@dimen/_3sdp"/>
+    <EditText
+        android:id="@+id/et_notes"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_marginRight="@dimen/_10sdp"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:background="@drawable/txt_login_background"
+        android:elevation="@dimen/_5sdp"
+        android:hint="ملاحظات"
+        android:inputType="text"
+        android:textColorHint="@color/purple_500"
+        android:fontFamily="@font/cairo_semibold"
+        android:textSize="@dimen/_13ssp"
+        android:padding="@dimen/_3sdp"/>
+    <Button
+        android:id="@+id/btn_add_visit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_login_background"
+        android:backgroundTint="@null"
+        android:text="إضافة زيارة"
+        android:fontFamily="@font/cairo_bold"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_15ssp"
+        android:layout_margin="@dimen/_10sdp"/>
+</LinearLayout>

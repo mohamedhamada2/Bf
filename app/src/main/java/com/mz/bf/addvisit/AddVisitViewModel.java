@@ -2,7 +2,6 @@ package com.mz.bf.addvisit;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -17,10 +16,15 @@ import retrofit2.Response;
 
 public class AddVisitViewModel {
     Context context;
-    AddVisitActivity addVisitActivity;
-    public AddVisitViewModel(Context context) {
+    OnVisitAddedListener listener;
+
+    public interface OnVisitAddedListener {
+        void onVisitAdded();
+    }
+
+    public AddVisitViewModel(Context context, OnVisitAddedListener listener) {
         this.context = context;
-        addVisitActivity = (AddVisitActivity) context;
+        this.listener = listener;
     }
 
     public void add_visit(String client_id, double tvLatitude, double tvLongitude, String notes, String user_id) {
@@ -37,8 +41,7 @@ public class AddVisitViewModel {
                         if (response.body().getSuccess() ==1){
                             pd.dismiss();
                             Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_LONG).show();
-                            context.startActivity(new Intent(addVisitActivity,VisitActivity.class));
-                            addVisitActivity.finish();
+                            listener.onVisitAdded();
                         }else {
                             pd.dismiss();
                             Log.e("distance",tvLatitude+"");
